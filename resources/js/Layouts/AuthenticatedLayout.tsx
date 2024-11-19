@@ -33,6 +33,12 @@ export default function Authenticated({
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    href={route('pacientes')}
+                                    active={route().current('pacientes')}
+                                >
+                                    Pacientes
+                                </NavLink>
                             </div>
                         </div>
 
@@ -170,7 +176,7 @@ export default function Authenticated({
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
-                </header>
+                </header>               
             )}
 
             <main>{children}</main>
