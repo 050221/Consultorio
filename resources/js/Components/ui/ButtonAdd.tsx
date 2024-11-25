@@ -12,8 +12,8 @@ export default function ButtonAdd({
     return (
         <button 
         onClick={onClick}
-        className={`flex bg-sky-500 px-4 py-2 text-white rounded hover:bg-sky-600 gap-1 ${className}`}
-      >
+        className={`flex ${className}  gap-1 `}
+      >    
         {children}
       </button>
     );

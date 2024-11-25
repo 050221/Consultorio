@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
         $user = User::create([
             'name' => 'administrador',
             'email' => 'administrador@gmail.com',
+            'phone' => '777777777',
             'role' => 'Admin',
             'password' => $hashedPassword,
         ]);
@@ -27,6 +28,6 @@ class UserSeeder extends Seeder
         $user->assignRole('Admin');
 
         
-        User::factory(12)->create();
+        User::factory(67)->create();
     }
 }

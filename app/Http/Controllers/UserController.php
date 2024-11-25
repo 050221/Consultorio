@@ -6,19 +6,26 @@ use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+
 
 class UserController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $Pacientes = User::where('role', 'Patient')->get();
-
+        $perPage = $request->input('per_page', 10); 
         
+        $pacientes = User::where('role', 'Patient')
+            ->select( 'id','name', 'email', 'phone', 'created_at')
+            ->paginate($perPage);
+    
         return Inertia::render('Paciente/PacientesIndex', [
-            'pacientes' => $Pacientes
+            'pacientes' => $pacientes,
         ]);
     }
+    
+    
 
     /**
      * Show the form for creating a new resource.
@@ -40,6 +47,7 @@ class UserController extends Controller
                 User::create([
                     'name' => $data['name'],
                     'email' => $data['email'],
+                    'phone' => $data['phone'],
                     'password' => bcrypt($data['password']), 
                 ]);
         
@@ -66,16 +74,32 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, $id)
     {
-        //
+        // Buscar el paciente
+        $paciente = User::findOrFail($id);
+        
+        // Realizar la actualización del paciente
+        $paciente->update($request->validated());
+    
+        // Si todo está bien, devolver una respuesta de éxito
+        return response()->json([
+            'success' => true,
+            'message' => 'Paciente editado exitosamente',
+            'paciente' => $paciente,
+        ]);
     }
+    
+    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        //
+        $paciente = User::findOrFail($id);
+        $paciente->delete();
+    
+        return redirect()->back()->with('success', 'Paciente creado exitosamente');
     }
 }

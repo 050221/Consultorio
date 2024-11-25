@@ -13,6 +13,7 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
+        phone: '',
         password: '',
         password_confirmation: '',
     });
@@ -63,6 +64,20 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
                         required
                     />
                     <InputError message={errors.name} className="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="phone" value="Telefono" />
+                    <TextInput
+                        id="phone"
+                        type="text"
+                        name="phone"
+                        value={data.phone}
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData('phone', e.target.value)}
+                        required
+                    />
+                    <InputError message={errors.phone} className="mt-2" />
                 </div>
 
                 <div>

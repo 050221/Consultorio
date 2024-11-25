@@ -22,7 +22,9 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/pacientes', [UserController::class, 'index'])->name('pacientes');
     Route::post('/pacientes', [UserController::class, 'store'])->name('pacientes.store');
-
+    Route::get('/pacientes/{id}/edit', [UserController::class, 'edit'])->name('pacientes.edit');
+    Route::put('/pacientes/{id}', [UserController::class, 'update'])->name('pacientes.update');
+    Route::delete('/pacientes/{id}', [UserController::class, 'destroy'])->name('pacientes.destroy');
 });
 
 Route::middleware('auth')->group(function () {
