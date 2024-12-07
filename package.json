@@ -14,7 +14,6 @@
         "@types/react-dom": "^18.0.10",
         "@vitejs/plugin-react": "^4.2.0",
         "autoprefixer": "^10.4.12",
-        "axios": "^1.7.4",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
         "postcss": "^8.4.31",
@@ -31,7 +30,10 @@
         "@fullcalendar/react": "^6.1.15",
         "@fullcalendar/timegrid": "^6.1.15",
         "@inertiajs/inertia": "^0.11.1",
+        "@radix-ui/react-popover": "^1.1.2",
+        "clsx": "^2.1.1",
         "lucide-react": "^0.460.0",
-        "sweetalert2": "^11.6.13"
+        "sweetalert2": "^11.6.13",
+        "tailwind-merge": "^2.5.5"
     }
 }

@@ -14,18 +14,18 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 10); 
-        
+        $perPage = $request->input('per_page', 10);
+
         $pacientes = User::where('role', 'Patient')
-            ->select( 'id','name', 'email', 'phone', 'created_at')
+            ->select('id', 'name', 'email', 'phone', 'created_at')
             ->paginate($perPage);
-    
+
         return Inertia::render('Paciente/PacientesIndex', [
             'pacientes' => $pacientes,
         ]);
     }
-    
-    
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -40,19 +40,19 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-                // Validar los datos enviados desde el formulario
-                $data = $request->validated();
-        
-                // Crear el paciente
-                User::create([
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'phone' => $data['phone'],
-                    'password' => bcrypt($data['password']), 
-                ]);
-        
-                // Retorna una respuesta exitosa a Inertia
-                return redirect()->back()->with('success', 'Paciente creado exitosamente');
+        // Validar los datos enviados desde el formulario
+        $data = $request->validated();
+
+        // Crear el paciente
+        User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'password' => bcrypt($data['password']),
+        ]);
+
+        // Retorna una respuesta exitosa a Inertia
+        return redirect()->back()->with('success', 'Paciente creado exitosamente');
     }
 
     /**
@@ -76,21 +76,21 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, $id)
     {
-        // Buscar el paciente
-        $paciente = User::findOrFail($id);
-        
-        // Realizar la actualización del paciente
-        $paciente->update($request->validated());
-    
-        // Si todo está bien, devolver una respuesta de éxito
-        return response()->json([
-            'success' => true,
-            'message' => 'Paciente editado exitosamente',
-            'paciente' => $paciente,
-        ]);
+        try {
+            // Buscar el paciente
+            $paciente = User::findOrFail($id);
+
+            // Realizar la actualización del paciente
+            $paciente->update($request->validated());
+            // Retornar respuesta exitosa
+            return redirect()->route('pacientes.index')->with('success', 'Paciente editado exitosamente');
+        } catch (\Exception $e) {
+            // Manejo de errores (por ejemplo, si algo falla en la actualización)
+            return back()->with('error', 'Ocurrió un problema al actualizar el paciente.');
+        }
     }
-    
-    
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -99,7 +99,7 @@ class UserController extends Controller
     {
         $paciente = User::findOrFail($id);
         $paciente->delete();
-    
-        return redirect()->back()->with('success', 'Paciente creado exitosamente');
+
+        return redirect()->back()->with('success', 'El paciente fue eliminado exitosamente');
     }
 }

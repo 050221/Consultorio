@@ -1,0 +1,42 @@
+.calendar-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .fc-daygrid-event {
+    /*background-color: #38bdf8; /* Azul */
+    
+  
+
+  }
+ /*
+  .fc-button-primary{
+    background-color: #0284c7 !important;
+    border-color: #0369a1 !important;
+  }
+  
+  /*
+  .event-confirmed {
+    background-color: #86efac;
+    color: white;
+  }
+  
+  .event-pending {
+    background-color: #fdba74;
+    color: white;
+  }
+  
+  .event-cancelled {
+    background-color: #fca5a5;
+    color: white;
+  }
+  
+  .event-default {
+    background-color: #7dd3fc;
+    color: white;
+  }*/

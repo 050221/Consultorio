@@ -11,7 +11,7 @@ class UpdateCitasRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,22 @@ class UpdateCitasRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'patient_id' => 'required|exists:users,id',
+            'fecha' => 'required|date', 
+            'hora' => 'required',
+            'status' => 'required|string',
+            'nota' => 'nullable'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'patient_id.required' => 'El paciente es obligatorio',
+            'fecha.required' => 'La fecha es obligatoria.',
+            'hora.required' => 'La hora es obligatoria.',
+            'status.required' => 'El estado es obligatorio.',
+            'fecha.date' => 'La fecha debe ser válida.',
         ];
     }
 }

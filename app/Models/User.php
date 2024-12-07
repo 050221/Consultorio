@@ -37,6 +37,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function citas()
+    {
+        return $this->hasMany(Citas::class, 'patient_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *

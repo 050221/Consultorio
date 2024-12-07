@@ -39,6 +39,12 @@ export default function Authenticated({
                                 >
                                     Pacientes
                                 </NavLink>
+                                <NavLink
+                                    href={route('citas')}
+                                    active={route().current('citas')}
+                                >
+                                    Citas
+                                </NavLink>
                             </div>
                         </div>
 

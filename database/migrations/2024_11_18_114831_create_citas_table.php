@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('citas', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class, 'patient_id');
-            $table->foreignIdFor(\App\Models\User::class, 'doctor_id');
             $table->date('fecha');
             $table->time('hora');
             $table->string('status')->default('pending');
