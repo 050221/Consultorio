@@ -6,26 +6,10 @@ import ButtonCancel from '@/Components/Form/ButtonCancel';
 import ReusableButton from '@/Components/Form/ReusableButton';
 import Swal from 'sweetalert2';
 import ReusableTextArea from '@/Components/ReusableTextArea';
-
-interface Cita {
-    id: number;
-    patient_id: number;
-    fecha: string;
-    hora: string;
-    status: string;
-    nota?: string;
-    users?: {
-        id: number;
-        name: string;
-    };
-}
-
-interface EditCitaFormProps {
-    cita: Cita;
-    onClose: () => void;
-}
+import { EditCitaFormProps } from '@/types';
 
 const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
+
     const userName = cita.users?.name || 'Desconocido';
 
     // useForm para manejar el estado del formulario

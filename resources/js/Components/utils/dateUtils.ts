@@ -11,9 +11,9 @@
 export const formatTimestamp = (timestamp: string): string => {
   const date = new Date(timestamp);
   return date.toLocaleString('es-MX', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-      timeZone: 'America/Mexico_City',
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'America/Mexico_City',
   });
 };
 
@@ -22,8 +22,18 @@ export const formatDate = (dateString: string): string => {
   const [year, month, day] = dateString.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   return new Intl.DateTimeFormat('es-MX', {
-      dateStyle: 'medium',
-      timeZone: 'America/Mexico_City',
+    dateStyle: 'medium',
+    timeZone: 'America/Mexico_City',
+  }).format(date);
+};
+
+// Convierte una cadena de fecha a un formato local
+export const formatDateComplete = (dateString: string): string => {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  return new Intl.DateTimeFormat('es-MX', {
+    dateStyle: 'long',
+    timeZone: 'America/Mexico_City',
   }).format(date);
 };
 
@@ -38,7 +48,7 @@ export const formatHora = (hora: string): string => {
 // Convierte hora de 12h a 24h
 export const convertirHoraA24Horas = (hora12: string): string => {
   if (!hora12 || !/^\d{1,2}:\d{2}\s[aApP]\.?[mM]\.?$/.test(hora12)) {
-      throw new Error("Formato de hora inválido. Ejemplo esperado: '3:30 p.m.'");
+    throw new Error("Formato de hora inválido. Ejemplo esperado: '3:30 p.m.'");
   }
   const [time, modifier] = hora12.split(' ');
   let [hours, minutes] = time.split(':').map(Number);
@@ -49,28 +59,41 @@ export const convertirHoraA24Horas = (hora12: string): string => {
 
 // Mapea estado a clase de estilo
 
-    // Función para mapear estado a clase de color
-    export const getStatusClassName = (status: string): string => {
-      switch (status.toLowerCase()) {
-        case 'confirmada': return 'event-confirmed';
-        case 'pendiente': return 'event-pending';
-        case 'cancelada': return 'event-cancelled';
-        default: return 'event-default';
-      }
-    };
-  
+// Función para mapear estado a clase de color
+export const getStatusClassName = (status: string): string => {
+  switch (status.toLowerCase()) {
+    case 'confirmada': return 'event-confirmed';
+    case 'pendiente': return 'event-pending';
+    case 'cancelada': return 'event-cancelled';
+    default: return 'event-default';
+  }
+};
+
 export const getEventStyle = (status: string) => {
-      switch (status.toLowerCase()) {
-        case 'confirmada':
-          return 'rounded-lg bg-green-100 text-green-800 font-semibold p-1';
-        case 'pendiente':
-          return 'rounded-lg bg-yellow-100 text-yellow-800 font-semibold p-1';
-        case 'cancelada':
-          return 'rounded-lg bg-red-100 text-red-800 font-semibold line-through p-1';
-        default:
-          return 'rounded-lg bg-gray-100 text-gray-800 p-1';
-      }
-    };
+  switch (status.toLowerCase()) {
+    case 'confirmada':
+      return 'rounded-lg bg-green-100 text-green-800 font-semibold p-1';
+    case 'pendiente':
+      return 'rounded-lg bg-yellow-100 text-yellow-800 font-semibold p-1';
+    case 'cancelada':
+      return 'rounded-lg bg-red-100 text-red-800 font-semibold line-through p-1';
+    default:
+      return 'rounded-lg bg-gray-100 text-gray-800 p-1';
+  }
+};
+
+
+export const getStatusEmoji = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'confirmada': return '✅';
+    case 'pendiente': return '⏳';
+    case 'cancelada': return '❌';
+    default: return '📅';
+  }
+};
+
+
+
 
 
 

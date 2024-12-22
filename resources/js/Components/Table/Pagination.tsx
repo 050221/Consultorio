@@ -26,16 +26,18 @@ const Pagination: React.FC<PaginationProps> = ({ links }) => {
                 {links.map((link, index) => (
                     <li key={index}>
                         <button
-                            className={`px-3 py-1 border rounded ${
-                                link.active
+                            className={`px-3 py-1 border rounded ${link.active
                                     ? 'bg-sky-500 text-white'
-                                    : 'bg-white text-gray-700 hover:bg-gray-100'
-                            }`}
+                                    : link.url
+                                        ? 'bg-white text-gray-700 hover:bg-gray-100'
+                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                }`}
                             disabled={!link.url}
                             onClick={() => handleClick(link.url)}
                             dangerouslySetInnerHTML={{ __html: link.label }}
                             aria-label={`Ir a la página ${link.label}`}
                         ></button>
+
                     </li>
                 ))}
             </ul>

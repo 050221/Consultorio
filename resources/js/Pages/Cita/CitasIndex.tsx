@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from "@inertiajs/react";
-import { PageProps as InertiaPageProps } from '@inertiajs/core';
+
 import { useTablePagination } from "@/Components/hooks/useTablePagination";
 import { UserPlus } from 'lucide-react';
 import Pagination from '@/Components/Table/Pagination';
@@ -16,29 +16,8 @@ import { formatDate, formatHora, getEventStyle } from '@/Components/utils/dateUt
 import FiltrosPopover from '@/Components/Table/FiltrosPopover';
 import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableButton from '@/Components/Form/ReusableButton';
+import {  Cita, CitasPageProps } from '@/types';
 
-
-// Actualización de las interfaces para incluir información del usuario
-interface User {
-    id: number;
-    name: string;
-}
-
-interface Cita {
-    id: number;
-    patient_id: number;
-    users?: User;  // Relación con el usuario/paciente
-    fecha: string;
-    hora: string;
-    status: string;
-}
-
-interface CustomPageProps extends InertiaPageProps {
-    citas: {
-        data: Cita[];
-        links: { url: string | null; label: string; active: boolean }[];
-    }
-}
 
 const columnsCitas = [
     { label: 'Paciente', key: 'users.name' },  // Funciona con propiedades anidadas
@@ -54,7 +33,7 @@ const columnsCitas = [
 ];
 
 const CitasIndex = () => {
-    const { citas } = usePage<CustomPageProps>().props;
+    const { citas } = usePage<CitasPageProps>().props; 
 
     const { isOpen: isEditModalOpen, openModal: openEditModal, closeModal: closeEditModal } = useModal();
 
@@ -81,8 +60,8 @@ const CitasIndex = () => {
         return citas.data.filter((cita) => {
             const matchesSearch =
                 (cita.users?.name || '').toLowerCase().includes(searchText.toLowerCase()) ||
-                cita.fecha.includes(searchText) ||
-                cita.hora.includes(searchText) ||
+                formatDate(cita.fecha).includes(searchText) ||
+                formatHora(cita.hora).includes(searchText) ||
                 cita.status.toLowerCase().includes(searchText.toLowerCase());
 
             const matchesStatus = filterStatus ? cita.status === filterStatus : true;

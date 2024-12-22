@@ -5,32 +5,31 @@ import ButtonCancel from '@/Components/Form/ButtonCancel';
 import ReusableButton from '@/Components/Form/ReusableButton';
 import TextInput from '@/Components/TextInput';
 import InputLabel from '@/Components/InputLabel';
+import ToggleSwitch from '@/Components/ui/ToggleSwitch';
+import { PacienteFormProps } from '@/types';
 
-interface Paciente {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-}
 
-interface EditPacienteFormProps {
-    paciente: Paciente;
-    onClose: () => void;
-}
 
-const EditPacienteForm: React.FC<EditPacienteFormProps> = ({ paciente, onClose }) => {
+const EditPacienteForm: React.FC<PacienteFormProps> = ({ paciente, onClose }) => {
     const { data, setData, put, errors, processing } = useForm({
         name: paciente.name,
         email: paciente.email,
         phone: paciente.phone,
+        activo: paciente.activo,
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData(e.target.id as keyof typeof data, e.target.value);
     };
 
+    const handleToggle = (checked: boolean) => {
+        setData('activo', checked);
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        console.log("Datos enviados al backend:", data);
 
         put(`/pacientes/${paciente.id}`, {
             onSuccess: () => {
@@ -112,6 +111,18 @@ const EditPacienteForm: React.FC<EditPacienteFormProps> = ({ paciente, onClose }
                     {errors.phone && (
                         <p id="phone-error" className="mt-2 text-sm text-red-600">
                             {errors.phone}
+                        </p>
+                    )}
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="activo" value="Activo" />
+                    <ToggleSwitch
+                        checked={data.activo}
+                        onChange={handleToggle} />
+                                          {errors.activo && (
+                        <p id="phone-error" className="mt-2 text-sm text-red-600">
+                            {errors.activo}
                         </p>
                     )}
                 </div>

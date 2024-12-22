@@ -1,0 +1,99 @@
+import React from 'react';
+import { PageProps as InertiaPageProps } from '@inertiajs/core';
+import { Calendar, Clock, User, Mail, Phone, FileText, CheckCircle, XCircle } from 'lucide-react';
+
+// Interfaz para el Paciente (relación con usuario)
+interface Paciente {
+  id: number;
+  name: string;
+  phone: string;
+  email: string;
+}
+
+// Interfaz para la Cita
+interface Cita {
+  id: number; // ID de la cita
+  patient: Paciente; // Relación con el Paciente (usuario)
+  fecha: string;
+  hora: string;
+  status: string;
+  nota?: string; // Propiedad opcional
+  created_at: string;
+}
+
+// Definir las Props que recibirá el componente, extendiendo las propiedades de Inertia
+interface Props extends InertiaPageProps {
+  historial_citas: Cita[]; // El array de citas
+}
+
+// Componente funcional de React con TypeScript
+const HistorialCitas: React.FC<Props> = ({ historial_citas }) => {
+  return (
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Historial de Citas</h1>
+
+      {historial_citas.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {historial_citas.map((cita) => (
+            <div
+              key={cita.id}
+              className="bg-white rounded-lg shadow-lg p-5 flex flex-col justify-between hover:shadow-xl transition-shadow"
+            >
+              {/* Información del Paciente */}
+              <div>
+                <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-700">
+                  <User className="w-5 h-5 text-blue-500" />
+                  {cita.patient.name}
+                </h2>
+                <p className="text-sm text-gray-500 flex items-center gap-2">
+                  <Mail className="w-4 h-4" /> {cita.patient.email}
+                </p>
+                <p className="text-sm text-gray-500 flex items-center gap-2">
+                  <Phone className="w-4 h-4" /> {cita.patient.phone}
+                </p>
+              </div>
+
+              {/* Información de la Cita */}
+              <div className="mt-4">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <Calendar className="w-5 h-5" />
+                  <span className="text-sm">{cita.fecha}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600 mt-2">
+                  <Clock className="w-5 h-5" />
+                  <span className="text-sm">{cita.hora}</span>
+                </div>
+              </div>
+
+              {/* Estado y Nota */}
+              <div className="mt-4">
+                <div className="flex items-center gap-2">
+                  {cita.status === 'completada' ? (
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  ) : (
+                    <XCircle className="w-5 h-5 text-red-500" />
+                  )}
+                  <span
+                    className={`text-sm font-semibold ${
+                      cita.status === 'completada' ? 'text-green-700' : 'text-red-700'
+                    }`}
+                  >
+                    {cita.status}
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-gray-600 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-gray-500" />
+                  {cita.nota ? cita.nota : <span className="italic text-gray-500">Sin nota</span>}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500 text-center">No hay citas en el historial.</p>
+      )}
+    </div>
+  );
+};
+
+export default HistorialCitas;

@@ -5,11 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Citas extends Model
+class Historial_Citas extends Model
 {
-    /** @use HasFactory<\Database\Factories\CitasFactory> */
-    use HasFactory;
-
 
     protected $fillable = [
         'patient_id',
@@ -19,12 +16,12 @@ class Citas extends Model
         'nota'
     ];
 
+    /** @use HasFactory<\Database\Factories\HistorialCitasFactory> */
+    use HasFactory;
 
-
-    protected $table = 'citas';
-
+    // Relación con el modelo User (un historial de cita pertenece a un usuario)
     public function users()
     {
-        return $this->belongsTo(User::class, 'patient_id'); // Cada cita pertenece a un usuario
+        return $this->belongsTo(User::class, 'patient_id');
     }
 }

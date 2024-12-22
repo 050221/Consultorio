@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { ChevronDown, ChevronUp,Eye, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye, Pencil, Trash2 } from 'lucide-react';
 import { useSortableData } from '../hooks/useSortableData';
 import ReusableButton from '../Form/ReusableButton';
+import RoleGuard from '../auth/RoleGuard';
 
 interface TableColumn {
     key: string; // Clave del objeto en 'data', puede ser anidada como 'users.name'
@@ -19,7 +20,7 @@ interface TableProps {
     omitKeys?: string[];
     className?: string;
     showActions?: boolean;
-    actionLabels?: {view?: string; edit?: string; delete?: string };
+    actionLabels?: { view?: string; edit?: string; delete?: string };
 }
 
 // Función para obtener valores anidados
@@ -39,7 +40,7 @@ const CustomTable: React.FC<TableProps> = ({
     omitKeys = [],
     className,
     showActions = true,
-    actionLabels = {view: 'Detalles', edit: 'Editar', delete: 'Eliminar' },
+    actionLabels = { view: 'Detalles', edit: 'Editar', delete: 'Eliminar' },
 }) => {
 
     const { sortedData, sortOptions, requestSort } = useSortableData(data);
@@ -112,14 +113,16 @@ const CustomTable: React.FC<TableProps> = ({
                                         </ReusableButton>
                                     )}
                                     {onDelete && (
-                                        <ReusableButton
-                                            onClick={() => onDelete(row.id)}
-                                            color="red"
-                                            title="Eliminar"
-                                        >
-                                            <Trash2 className="h-5 w-4 mr-1" />
-                                            {actionLabels.delete}
-                                        </ReusableButton>
+                                        <RoleGuard allowedRoles={['Admin']}>
+                                            <ReusableButton
+                                                onClick={() => onDelete(row.id)}
+                                                color="red"
+                                                title="Eliminar"
+                                            >
+                                                <Trash2 className="h-5 w-4 mr-1" />
+                                                {actionLabels.delete}
+                                            </ReusableButton>
+                                        </RoleGuard>
                                     )}
                                 </td>
                             )}

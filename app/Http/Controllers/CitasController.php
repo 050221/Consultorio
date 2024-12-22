@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Citas;
 use App\Http\Requests\StoreCitasRequest;
 use App\Http\Requests\UpdateCitasRequest;
+use App\Models\Historial_Citas;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class CitasController extends Controller
         $patientIdsWithCitas = Citas::pluck('patient_id')->toArray();
     
         // Filtra los pacientes excluyendo los IDs que ya tienen citas
-        $pacientes = User::where('role', 'Patient')
+        $users = User::where('role', 'Patient')
             ->whereNotIn('id', $patientIdsWithCitas)
             ->select('id', 'name')
             ->get();
@@ -53,7 +54,7 @@ class CitasController extends Controller
             ->get();
     
         return Inertia::render('Cita/CitasCreateForm', [
-            'pacientes' => $pacientes,
+            'users' => $users,
             'citas' => $citas,
         ]);
     }
@@ -158,4 +159,20 @@ class CitasController extends Controller
         return redirect()->back()->with('success', 'La cita fue eliminada exitosamente');
         
     }
+
+    public function historial_citas(Request $request)
+    {
+
+        $perPage = $request->input('per_page', 10);
+        
+        $citas = Historial_Citas::with(['users' => function ($query) {
+            $query->select('id', 'name', 'phone', 'email'); // Limita las columnas que quieres obtener
+        }]) ->paginate($perPage);
+    
+        return Inertia::render('Cita/Historial_citas', [
+            'citas' => $citas,
+            'perPage' => $perPage,
+        ]);
+    }
+    
 }

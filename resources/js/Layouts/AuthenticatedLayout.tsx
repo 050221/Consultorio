@@ -4,6 +4,8 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useState } from 'react';
+import { Calendar, ClipboardList, Users, House } from "lucide-react";
+import RoleGuard from '@/Components/auth/RoleGuard';
 
 export default function Authenticated({
     header,
@@ -30,20 +32,37 @@ export default function Authenticated({
                                 <NavLink
                                     href={route('dashboard')}
                                     active={route().current('dashboard')}
+                                    className="flex items-center space-x-2"
                                 >
-                                    Dashboard
+                                    <House className="w-5 h-5" />
+                                    <span>inicio</span>
                                 </NavLink>
+
+                                <RoleGuard allowedRoles={['Admin', 'Doctor']}>
+                                    <NavLink
+                                        href={route('pacientes')}
+                                        active={route().current('pacientes')}
+                                        className="flex items-center space-x-2"
+                                    >
+                                        <Users className="w-5 h-5" />
+                                        <span>Pacientes</span>
+                                    </NavLink>
+                                    <NavLink
+                                        href={route('citas')}
+                                        active={route().current('citas')}
+                                        className="flex items-center space-x-2"
+                                    >
+                                        <Calendar className="w-5 h-5" />
+                                        <span>Citas</span>
+                                    </NavLink>
+                                </RoleGuard>
                                 <NavLink
-                                    href={route('pacientes')}
-                                    active={route().current('pacientes')}
+                                    href={route('historial_citas')}
+                                    active={route().current('historial_citas')}
+                                    className="flex items-center space-x-2"
                                 >
-                                    Pacientes
-                                </NavLink>
-                                <NavLink
-                                    href={route('citas')}
-                                    active={route().current('citas')}
-                                >
-                                    Citas
+                                    <ClipboardList className="w-5 h-5" />
+                                    <span>Historial de citas</span>
                                 </NavLink>
                             </div>
                         </div>
@@ -79,14 +98,14 @@ export default function Authenticated({
                                         <Dropdown.Link
                                             href={route('profile.edit')}
                                         >
-                                            Profile
+                                            Perfil
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route('logout')}
                                             method="post"
                                             as="button"
                                         >
-                                            Log Out
+                                            Cerrar sesión
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>
@@ -182,7 +201,7 @@ export default function Authenticated({
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
-                </header>               
+                </header>
             )}
 
             <main>{children}</main>

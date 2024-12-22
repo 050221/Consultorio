@@ -15,39 +15,29 @@ import { useDeleteItem } from '@/Components/hooks/useDeleteItem';
 import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableButton from '@/Components/Form/ReusableButton';
 import ViewPaciente from './ViewPaciente';
+import { User, PacientesPageProps } from '@/types';
+import StatusBadge from '@/Components/ui/StatusBadge';
 
-
-// Tipos
-interface Paciente {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    created_at: string;
-}
-
-
-interface CustomPageProps extends InertiaPageProps {
-    pacientes: {
-        data: Paciente[];
-        links: { url: string | null; label: string; active: boolean }[];
-    };
-}
 
 const columnsPacientes = [
     { label: 'Nombre', key: 'name' },
     { label: 'Correo', key: 'email' },
     { label: 'Telefono', key: 'phone', },
-];
+    {
+        key: 'activo',
+        label: 'Estado',
+        format: (value: boolean | number) => <StatusBadge value={value} />,
+      },
+    ];
 
 const PacientesIndex = () => {
-    const { pacientes } = usePage<CustomPageProps>().props;
+    const { pacientes } = usePage<PacientesPageProps>().props;
 
     const { isOpen: isCreateModalOpen, openModal: openCreateModal, closeModal: closeCreateModal } = useModal();
     const { isOpen: isViewModalOpen, openModal: openViewModal, closeModal: closeViewModal } = useModal();
     const { isOpen: isEditModalOpen, openModal: openEditModal, closeModal: closeEditModal } = useModal();
 
-    const [selectedPaciente, setSelectedPaciente] = useState<Paciente | null>(null);
+    const [selectedPaciente, setSelectedPaciente] = useState<User | null>(null);
     const [searchText, setSearchText] = useState<string>("");
 
     // Función para manejar la búsqueda
@@ -55,6 +45,7 @@ const PacientesIndex = () => {
         setSearchText(value);
     };
 
+    
     // Filtrar datos de la tabla
     const filteredPacientes = pacientes.data.filter((paciente) =>
         paciente.name.toLowerCase().includes(searchText.toLowerCase()) ||

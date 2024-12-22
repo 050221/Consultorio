@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -25,6 +26,7 @@ class UpdateUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $this->route('id'), 
             'phone' => 'required|string|unique:users,phone,' . $this->route('id'),
+            'activo' => 'required|boolean',
         ];
     }
 
@@ -39,5 +41,21 @@ class UpdateUserRequest extends FormRequest
             'phone.unique' => 'El teléfono ya está registrado.',
         ];
     }
+
+    public function withValidator($validator)
+{
+    $validator->after(function ($validator) {
+        // Verifica si el usuario tiene citas
+        if ($this->input('activo') == 0) { // Intento de desactivar al usuario
+            $userId = $this->route('id'); // ID del usuario de la ruta
+            $hasCitas = DB::table('citas')->where('patient_id', $userId)->exists();
+
+            if ($hasCitas) {
+                $validator->errors()->add('activo', 'No se puede desactivar al usuario porque tiene una citas registrada.');
+            }
+        }
+    });
+}
+
     
 }

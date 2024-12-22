@@ -2,21 +2,11 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import { Phone, Mail, Calendar } from 'lucide-react'; // Usamos los iconos de lucide-react
 import LabelValue from '@/Components/LabelValue';
+import { PacienteFormProps } from '@/types';
 
-interface Paciente {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    created_at: string;
-}
 
-interface ViewPacienteProps {
-    paciente: Paciente;
-    onClose: () => void;
-}
 
-const ViewPaciente: React.FC<ViewPacienteProps> = ({ paciente, onClose }) => {
+const ViewPaciente: React.FC<PacienteFormProps> = ({ paciente, onClose }) => {
     return (
         <>
             <Head title="Detalles del Paciente" />

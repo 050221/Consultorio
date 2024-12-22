@@ -17,7 +17,7 @@ class UserController extends Controller
         $perPage = $request->input('per_page', 10);
 
         $pacientes = User::where('role', 'Patient')
-            ->select('id', 'name', 'email', 'phone', 'created_at')
+            ->select('id', 'name', 'email', 'phone','activo', 'created_at')
             ->paginate($perPage);
 
         return Inertia::render('Paciente/PacientesIndex', [
@@ -44,12 +44,14 @@ class UserController extends Controller
         $data = $request->validated();
 
         // Crear el paciente
-        User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => bcrypt($data['password']),
         ]);
+
+        $user->assignRole('Patient');
 
         // Retorna una respuesta exitosa a Inertia
         return redirect()->back()->with('success', 'Paciente creado exitosamente');

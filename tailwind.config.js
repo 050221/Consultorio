@@ -15,6 +15,14 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            maxWidth: {
+                '8xl': '90rem', 
+            },
+            textColor: {
+                'yellow-800': 'rgb(133 77 14)',   // Texto amarillo oscuro
+                'green-800': 'rgb(22 101 52)',    // Texto verde oscuro
+                'red-800': 'rgb(153 27 27)',      // Texto rojo oscuro
+            },
         },
     },
 

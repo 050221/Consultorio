@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Inertia\Inertia; // Importar la clase Inertia
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 

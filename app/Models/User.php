@@ -8,10 +8,16 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+     * @method \Illuminate\Support\Collection getRoleNames()
+     * @method \Illuminate\Database\Eloquent\Collection getAllPermissions()
+     */
+
 class User extends Authenticatable
 {
 
     use HasRoles;
+    
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -25,6 +31,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'role',
+        'activo'
     ];
 
     /**
@@ -40,6 +48,14 @@ class User extends Authenticatable
     public function citas()
     {
         return $this->hasMany(Citas::class, 'patient_id');
+
+        // uno a muchos: un usuario puede tener muchas citas
+    }
+
+    // Relación con el modelo HistorialCita (un usuario puede tener muchas citas)
+    public function historialCitas()
+    {
+        return $this->hasMany(Historial_Citas::class, 'patient_id');
     }
 
     /**

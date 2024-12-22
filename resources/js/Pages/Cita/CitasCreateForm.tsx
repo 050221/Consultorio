@@ -1,7 +1,6 @@
 import InputLabel from '@/Components/InputLabel';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, usePage } from '@inertiajs/react';
-import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import TextInput from '@/Components/TextInput';
 import InputError from '@/Components/InputError';
 import Calendar from '@/Components/fullCalendar/Calendar';
@@ -11,21 +10,8 @@ import Swal from 'sweetalert2';
 import { Inertia } from '@inertiajs/inertia';
 import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableTextArea from '@/Components/ReusableTextArea';
+import { CitaPageProps } from '@/types';
 
-
-//validar los requird por aletas de 
-
-
-// Interfaz para el tipo de paciente
-interface Paciente {
-    id: number;
-    name: string;
-}
-
-// Interfaz personalizada para los props de la página
-interface CustomPageProps extends InertiaPageProps {
-    pacientes: Paciente[]; // La lista de pacientes enviada desde el controlador
-}
 
 const CitasCreate = () => {
 
@@ -37,7 +23,7 @@ const CitasCreate = () => {
         nota: '',
     });
 
-    const { pacientes } = usePage<CustomPageProps>().props; // Obtenemos los pacientes desde los props
+    const { users, citas } = usePage<CitaPageProps>().props; 
 
 
     const submit = (e: React.FormEvent) => {
@@ -96,9 +82,9 @@ const CitasCreate = () => {
                                             value="Nombre del paciente:"
                                         />
                                         <ReusableSelect
-                                            options={pacientes.map(paciente => ({
-                                                value: paciente.id,
-                                                label: paciente.name
+                                            options={users.map(user => ({
+                                                value: user.id,
+                                                label: user.name
                                             }))}
                                             value={data.patient_id || ''}
                                             onChange={(event) => setData('patient_id', event.target.value)}
@@ -169,7 +155,7 @@ const CitasCreate = () => {
                                             placeholder="Registre detalles importantes de la consulta..."
                                             maxLength={700}
                                             className="font-mono text-base leading-relaxed tracking-wide"
-                                            required
+                                            
                                         />
                                         <div className="text-right text-sm text-gray-500">
                                             {data.nota.length} / 700 caracteres
@@ -197,7 +183,7 @@ const CitasCreate = () => {
                                 </form>
                             </div>
                             <div className='w-full sm:w-8/12'>
-                                <Calendar />
+                                <Calendar citas={citas} />
                             </div>
 
                         </div>

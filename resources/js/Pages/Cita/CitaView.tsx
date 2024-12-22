@@ -7,30 +7,14 @@ import { Inertia } from "@inertiajs/inertia";
 import LabelValue from "@/Components/LabelValue";
 import { formatDate, formatHora, formatTimestamp, getStatusClassName,
   getEventStyle } from "@/Components/utils/dateUtils";
+import { CitaViewPageProps } from "@/types";
 
-interface Paciente {
-  id: number;
-  name: string;
-  phone: string;
-}
 
-interface Cita {
-  users: Paciente;
-  fecha: string;
-  hora: string;
-  status: string;
-  nota?: string;
-  created_at: string;
-}
-
-interface Props extends InertiaPageProps {
-  cita: Cita;
-}
 
 // Componente reutilizable para etiqueta y valor
 
 const CitaView: React.FC = () => {
-  const { cita } = usePage<Props>().props;
+  const { cita } = usePage<CitaViewPageProps>().props;
   const [isNoteExpanded, setIsNoteExpanded] = useState(false);
 
   const handleClick = () => {
