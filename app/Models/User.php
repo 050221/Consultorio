@@ -16,6 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
 
+    use Notifiable;
     use HasRoles;
     
     /** @use HasFactory<\Database\Factories\UserFactory> */

@@ -6,6 +6,7 @@ use App\Models\Citas;
 use App\Models\Historial_Citas;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class MoveExpiredAppointments extends Command
 {
@@ -29,26 +30,40 @@ class MoveExpiredAppointments extends Command
     public function handle()
     {
         $now = Carbon::now(); // Fecha actual
-
         // Obtener citas con fecha anterior a hoy
-        $citasParaHistorial = Citas::where('status', ['confirmado', 'cancelado'])
-        ->where('fecha', '<', now())
+        $citasParaHistorial = Citas::whereIn('status', ['Confirmada', 'Cancelada'])
+        ->where(function ($query) use ($now) {
+            $query->where('fecha', '<', $now->toDateString())
+                  ->orWhere(function ($query) use ($now) {
+                      $query->where('fecha', '=', $now->toDateString())
+                            ->where('hora', '<', $now->toTimeString());
+                  });
+        })
         ->get();
 
         foreach ($citasParaHistorial as $cita) {
-            Historial_Citas::create([
-                'patient_id' => $cita->patient_id,
-                'fecha' => $cita->fecha,
-                'hora' => $cita->hora,
-                'nota' => $cita->nota,
-                'status' => $cita->status
-            ]);
+            try {
+                // Crear el registro en historial_citas
+                Historial_Citas::create([
+                    'patient_id' => $cita->patient_id,
+                    'fecha' => $cita->fecha,
+                    'hora' => $cita->hora,
+                    'status' => $cita->status,
+                    'nota' => $cita->nota,
+                ]);
 
-            // Eliminar la cita original
-            $cita->delete();
+                // Eliminar la cita original
+                $cita->delete();
+
+            } catch (\Exception $e) {
+                // Registrar errores en el log
+                Log::error("Error al mover la cita al historial", [
+                    'cita_id' => $cita->id ?? null,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
 
         $this->info('Citas expiradas movidas al historial correctamente.');
-
     }
 }

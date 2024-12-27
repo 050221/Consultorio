@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         // comando para ejecutar  php artisan app:move-expired-appointments
 
         $schedule->command('app:move-expired-appointments')->dailyAt('03:00');
+        $schedule->command('app:send-appointment-reminders')->dailyAt('08:00');
     }
 
 
