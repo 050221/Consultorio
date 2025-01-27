@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('historial__citas', function (Blueprint $table) {
+        Schema::create('historial_citas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('users'); 
-            $table->date('fecha');
+            $table->foreignIdFor(\App\Models\User::class, 'patient_id');
+            $table->date('fecha')->index();
             $table->time('hora');
-            $table->string('status');
+            $table->string('status')->index();
             $table->longText('nota')->nullable();
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('historial__citas');
+        Schema::dropIfExists('historial_citas');
     }
 };

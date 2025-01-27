@@ -49,6 +49,7 @@ const ReusableSelect: React.FC<ReusableSelectProps> = ({
 }) => {
   return (
     <select
+      aria-label={placeholder}
       value={value}
       onChange={onChange}
       name={name}

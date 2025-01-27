@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Info } from 'lucide-react';
 import { Cita } from '@/types';
-import { formatDate, formatHora, getEventStyle} from '@/Components/utils/dateUtils';
+import { formatDate, formatHora, getEventStyle } from '@/Components/utils/dateUtils';
+import { Inertia } from '@inertiajs/inertia';
 
 interface AccordionProps {
   citas: Cita[];
@@ -13,6 +14,10 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
 
   const togglePanel = (index: number) => {
     setOpenPanel((prev) => (prev === index ? null : index));
+  };
+
+  const view = (id: number) => {
+    Inertia.visit(`/cita/${id}`); // Redirige a la ruta con el ID de la cita
   };
 
   return (
@@ -45,7 +50,7 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
                 )}
               </div>
             </button>
-  
+
             {/* Accordion Panel */}
             {openPanel === index && (
               <div
@@ -69,10 +74,18 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
                     <span className="font-semibold w-24">Estado:</span>
                     <span className={`font-medium ${getEventStyle(cita.status)}`}>{cita.status}</span>
                   </li>
-                  <li className="flex items-center">
-                    <span className="font-semibold w-24">Nota:</span>
-                    <span>{cita.nota || 'Sin nota'}</span>
+                  <li className="flex items-center justify-end mt-4">
+                    <button
+                      onClick={() => view(cita.id)}
+                      className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-sky-500 to-blue-600 rounded-lg shadow-md hover:shadow-lg hover:from-sky-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 flex items-center gap-2 transition-all duration-300"
+                      aria-label={`Ver detalles de la cita con ${cita.users?.name || 'paciente desconocido'}`}
+                    >
+                      <Info className="h-4 w-4" />
+                      Ver detalles de la cita
+                    </button>
+
                   </li>
+
                 </ul>
               </div>
             )}
@@ -86,7 +99,7 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
       )}
     </div>
   );
-  
+
 };
 
 export default Accordion;

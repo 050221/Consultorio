@@ -57,8 +57,8 @@ export default function Authenticated({
                                     </NavLink>
                                 </RoleGuard>
                                 <NavLink
-                                    href={route('historial_citas')}
-                                    active={route().current('historial_citas')}
+                                    href={route('historial')}
+                                    active={route().current('historial')}
                                     className="flex items-center space-x-2"
                                 >
                                     <ClipboardList className="w-5 h-5" />

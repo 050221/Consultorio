@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\CitasController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistorialCController;
+use App\Http\Controllers\HistorialCitasController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Models\HistorialCitas;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,11 +43,11 @@ Route::middleware(['auth', 'role:Admin|Doctor'])->group(function () {
     Route::get('/cita/{id}/edit', [CitasController::class, 'edit'])->name('citas.edit');
     Route::put('/cita/{id}', [CitasController::class, 'update'])->name('citas.update');
     Route::delete('/cita/{id}', [CitasController::class, 'destroy'])->name('citas.destroy');
-    Route::get('/historial_citas', [CitasController::class, 'historial_citas'])->name('historial_citas');
 });
 
+
 Route::middleware(['auth', 'role:Admin|Doctor|Patient'])->group(function () {
-    Route::get('/historial_citas', [CitasController::class, 'historial_citas'])->name('historial_citas');
+    Route::get('/historial', [HistorialCitasController::class, 'index'])->name('historial');
 });
 
 

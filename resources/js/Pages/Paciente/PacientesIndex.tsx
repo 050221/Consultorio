@@ -10,7 +10,7 @@ import useModal from '@/Components/ui/UseModal';
 import EditPacienteForm from './EditPacienteForm';
 import { UserPlus } from 'lucide-react';
 import SearchBar from '@/Components/Table/SearchBar';
-import { useTablePagination } from '@/Components/hooks/useTablePagination';
+import { useBasicTablePagination } from '@/Components/hooks/useBasicTablePagination';
 import { useDeleteItem } from '@/Components/hooks/useDeleteItem';
 import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableButton from '@/Components/Form/ReusableButton';
@@ -27,8 +27,8 @@ const columnsPacientes = [
         key: 'activo',
         label: 'Estado',
         format: (value: boolean | number) => <StatusBadge value={value} />,
-      },
-    ];
+    },
+];
 
 const PacientesIndex = () => {
     const { pacientes } = usePage<PacientesPageProps>().props;
@@ -38,20 +38,7 @@ const PacientesIndex = () => {
     const { isOpen: isEditModalOpen, openModal: openEditModal, closeModal: closeEditModal } = useModal();
 
     const [selectedPaciente, setSelectedPaciente] = useState<User | null>(null);
-    const [searchText, setSearchText] = useState<string>("");
 
-    // Función para manejar la búsqueda
-    const handleSearch = (value: string) => {
-        setSearchText(value);
-    };
-
-    
-    // Filtrar datos de la tabla
-    const filteredPacientes = pacientes.data.filter((paciente) =>
-        paciente.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        paciente.email.toLowerCase().includes(searchText.toLowerCase()) ||
-        paciente.phone.toLowerCase().includes(searchText.toLowerCase())
-    );
 
     const handleView = (id: number) => {
         const paciente = pacientes.data.find(p => p.id === id);
@@ -77,18 +64,17 @@ const PacientesIndex = () => {
         resourceName: 'paciente',
     });
 
-    const { perPage, isLoading, handlePerPageChange } = useTablePagination({
+    const { perPage, isLoading, handlePerPageChange, handleSearchChange } = useBasicTablePagination({
         initialPerPage: 10,
         path: '/pacientes',
         resourceKey: 'pacientes',
     });
 
-
     return (
         <AuthenticatedLayout
             header={
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-semibold text-gray-800">Pacientes</h2>
+                    <h2 className="text-2xl font-bold text-gray-800">Pacientes</h2>
                     <ReusableButton
                         onClick={openCreateModal}
                     >
@@ -111,7 +97,7 @@ const PacientesIndex = () => {
                                 <div className="w-full sm:w-1/2 my-2 md:my-0">
                                     <SearchBar
                                         placeHolder="Buscar paciente..."
-                                        onSearch={handleSearch}
+                                        onSearch={handleSearchChange}
                                     />
                                 </div>
 
@@ -127,7 +113,6 @@ const PacientesIndex = () => {
                                                     { value: 50, label: '50' },
                                                     { value: 100, label: '100' },
                                                 ]}
-                                                placeholder=""
                                             />
                                         </div>
                                     </div>
@@ -143,33 +128,25 @@ const PacientesIndex = () => {
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div>
                                 </div>
                             ) : (
+
                                 <>
-                                    {/* Tabla existente */}
                                     {pacientes.data.length === 0 ? (
                                         <div className="text-center py-4 text-gray-500">
-                                            No hay pacientes registrados actualmente.
+                                            No se encontraron pacientes que coincidan con la búsqueda.
                                             <hr className='h-2 w-full' />
                                         </div>
                                     ) : (
-                                        <>
-                                            {filteredPacientes.length === 0 ? (
-                                                <div className="text-center py-4 text-gray-500">
-                                                    No se encontraron pacientes que coincidan con la búsqueda.
-                                                    <hr className='h-2 w-full' />
-                                                </div>
-                                            ) : (
-                                                <CustomTable
-                                                    headers={columnsPacientes}
-                                                    data={filteredPacientes}
-                                                    onView={handleView}
-                                                    onEdit={handleEdit}
-                                                    onDelete={handleDelete}
-                                                    showActions
-                                                />
-                                            )}
-                                        </>
+                                        <CustomTable
+                                            headers={columnsPacientes}
+                                            data={pacientes.data}
+                                            onView={handleView}
+                                            onEdit={handleEdit}
+                                            onDelete={handleDelete}
+                                            showActions
+                                        />
                                     )}
                                 </>
+
                             )}
 
                             <div className="mt-4 flex justify-center">
@@ -193,14 +170,14 @@ const PacientesIndex = () => {
                     onClose={closeCreateModal} />
             </Modal>
 
-             {/* Modal para ver el paciente */}
-             <Modal
+            {/* Modal para ver el paciente */}
+            <Modal
                 isOpen={isViewModalOpen}
                 onClose={closeViewModal}
                 title="Detalles del Paciente"
                 preventOutsideClick
             >
-             {selectedPaciente && (
+                {selectedPaciente && (
                     <ViewPaciente
                         paciente={selectedPaciente}
                         onClose={closeViewModal}

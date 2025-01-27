@@ -7,18 +7,13 @@ import ReusableButton from "../Form/ReusableButton";
 import InputLabel from "../InputLabel";
 
 interface FiltrosPopoverProps {
-    filterDate: string;
-    filterStatus: string;
-    onDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onStatusChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    date: string;
+    status: string;
+    handleDateChange: (value: string) => void;
+    handleStatusChange: (value: string) => void;
 }
 
-const FiltrosPopover: React.FC<FiltrosPopoverProps> = ({
-    filterDate,
-    filterStatus,
-    onDateChange,
-    onStatusChange,
-}) => {
+const FiltrosPopover: React.FC<FiltrosPopoverProps> = ({ date, status, handleDateChange, handleStatusChange }) => {
     const [open, setOpen] = useState(false);
 
     return (
@@ -39,17 +34,18 @@ const FiltrosPopover: React.FC<FiltrosPopoverProps> = ({
                         <TextInput
                             id="date"
                             type="date"
-                            value={filterDate}
-                            onChange={onDateChange}
-                            className="border border-gray-300 rounded px-4 py-2 w-full"
+                            value={date}
+                            onChange={(e) => handleDateChange(e.target.value)}
+                            className="border border-gray-300 rounded px-4 py-2 w-full cursor-pointer"
                         />
+
                     </div>
                     <div>
                         <InputLabel htmlFor="status" value="Estado" />
                         <ReusableSelect
                             id="status"
-                            value={filterStatus}
-                            onChange={onStatusChange}
+                            value={status}
+                            onChange={(e) => handleStatusChange(String(e.target.value))}
                             options={[
                                 { value: '', label: 'Todos los estados' },
                                 { value: 'Pendiente', label: 'Pendiente' },
@@ -58,7 +54,6 @@ const FiltrosPopover: React.FC<FiltrosPopoverProps> = ({
                             ]}
                             placeholder=""
                         />
-
                     </div>
                     <div className="flex justify-end space-x-2">
                         <ReusableButton

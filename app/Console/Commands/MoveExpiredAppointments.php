@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Citas;
-use App\Models\Historial_Citas;
+use App\Models\HistorialCitas;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -44,7 +44,7 @@ class MoveExpiredAppointments extends Command
         foreach ($citasParaHistorial as $cita) {
             try {
                 // Crear el registro en historial_citas
-                Historial_Citas::create([
+                HistorialCitas::create([
                     'patient_id' => $cita->patient_id,
                     'fecha' => $cita->fecha,
                     'hora' => $cita->hora,

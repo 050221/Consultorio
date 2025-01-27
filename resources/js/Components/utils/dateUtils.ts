@@ -72,11 +72,11 @@ export const getStatusClassName = (status: string): string => {
 export const getEventStyle = (status: string) => {
   switch (status.toLowerCase()) {
     case 'confirmada':
-      return 'rounded-lg bg-green-100 text-green-800 font-semibold p-1';
+      return 'rounded-lg bg-green-100 text-green-700 font-semibold p-1';
     case 'pendiente':
-      return 'rounded-lg bg-yellow-100 text-yellow-800 font-semibold p-1';
+      return 'rounded-lg bg-yellow-100 text-yellow-600 font-semibold p-1';
     case 'cancelada':
-      return 'rounded-lg bg-red-100 text-red-800 font-semibold line-through p-1';
+      return 'rounded-lg bg-red-100 text-red-700 font-semibold line-through p-1';
     default:
       return 'rounded-lg bg-gray-100 text-gray-800 p-1';
   }

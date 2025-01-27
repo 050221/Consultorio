@@ -11,14 +11,33 @@ export interface User {
 
 export interface Cita {
     id: number;
+    patient_id: number;
     fecha: string;
     hora: string;
     status: string;
-    patient_id: number;
     nota?: string;
     created_at: string;
     users: User; 
 }
+
+export interface HistorialPageProps extends PageProps {
+    historialC: {
+        data: Cita[]; // Datos paginados
+        links: PaginationLink[];
+    };
+    [key: string]: any; 
+}
+
+
+export interface CitasPageProps extends PageProps {
+    citas: {
+        data: Cita[]; // Datos paginados
+        links: PaginationLink[];
+    };
+    [key: string]: any; 
+}
+
+
 
 
 // por defecto
@@ -50,6 +69,12 @@ export interface CitasPageProps extends PageProps {
         links: PaginationLink[];
     };
     [key: string]: any; 
+}
+
+export interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
 }
 
 //archivo  create 
@@ -99,6 +124,7 @@ export interface PacienteFormProps {
     paciente: User;  
     onClose: () => void;
 }
+
 
 
 

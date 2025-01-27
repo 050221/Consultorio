@@ -56,7 +56,7 @@ class User extends Authenticatable
     // Relación con el modelo HistorialCita (un usuario puede tener muchas citas)
     public function historialCitas()
     {
-        return $this->hasMany(Historial_Citas::class, 'patient_id');
+        return $this->hasMany(HistorialCitas::class, 'patient_id');
     }
 
     /**

@@ -1,18 +1,13 @@
 import React from 'react';
 import { Inertia } from '@inertiajs/inertia';
-
-interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
+import { PaginationLink } from '@/types';
 
 interface PaginationProps {
     links: PaginationLink[]; // Enlaces de paginación
 }
 
 const Pagination: React.FC<PaginationProps> = ({ links }) => {
-    if (!links || links.length === 0) return null; // Si no hay enlaces, no renderizamos nada
+    if (!links || links.length === 0) return null; // No renderizar si no hay enlaces
 
     const handleClick = (url: string | null) => {
         if (url) {
@@ -27,17 +22,16 @@ const Pagination: React.FC<PaginationProps> = ({ links }) => {
                     <li key={index}>
                         <button
                             className={`px-3 py-1 border rounded ${link.active
-                                    ? 'bg-sky-500 text-white'
-                                    : link.url
-                                        ? 'bg-white text-gray-700 hover:bg-gray-100'
-                                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                ? 'bg-sky-500 text-white'
+                                : link.url
+                                    ? 'bg-white text-gray-700 hover:bg-gray-100'
+                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                 }`}
                             disabled={!link.url}
                             onClick={() => handleClick(link.url)}
                             dangerouslySetInnerHTML={{ __html: link.label }}
                             aria-label={`Ir a la página ${link.label}`}
                         ></button>
-
                     </li>
                 ))}
             </ul>

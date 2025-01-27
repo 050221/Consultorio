@@ -15,15 +15,25 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
+        $search = $request->input('search', '');
 
         $pacientes = User::where('role', 'Patient')
-            ->select('id', 'name', 'email', 'phone','activo', 'created_at')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%");
+                });
+            })
+            ->select('id', 'name', 'email', 'phone', 'activo', 'created_at')
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
         return Inertia::render('Paciente/PacientesIndex', [
             'pacientes' => $pacientes,
         ]);
     }
+
 
 
 
