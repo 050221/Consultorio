@@ -17,7 +17,7 @@ class UserController extends Controller
         $perPage = $request->input('per_page', 10);
         $search = $request->input('search', '');
 
-        $pacientes = User::where('role', 'Patient')
+        $pacientes = User::where('role', 'patient')
             ->when($search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -25,7 +25,7 @@ class UserController extends Controller
                         ->orWhere('phone', 'like', "%{$search}%");
                 });
             })
-            ->select('id', 'name', 'email', 'phone', 'activo', 'created_at')
+            ->select('id', 'name', 'email', 'phone', 'activo', 'created_at', 'birthdate')
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
 
@@ -51,6 +51,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         // Validar los datos enviados desde el formulario
+        //dd($request->validated());
         $data = $request->validated();
 
         // Crear el paciente
@@ -59,9 +60,10 @@ class UserController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => bcrypt($data['password']),
+            'birthdate' => $data['birthdate'],
         ]);
 
-        $user->assignRole('Patient');
+        $user->assignRole('patient');
 
         // Retorna una respuesta exitosa a Inertia
         return redirect()->back()->with('success', 'Paciente creado exitosamente');

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Check, X } from 'lucide-react'; 
+import React from "react";
+import { Check, X } from "lucide-react";
 
 interface ToggleSwitchProps {
     checked: boolean;
@@ -10,15 +10,17 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange }) => {
     return (
         <button
             type="button"
+            role="switch"
+            aria-checked={checked}
             onClick={() => onChange(!checked)}
-            className={`relative w-12 h-6 flex items-center rounded-full transition-colors duration-300 ${
-                checked ? 'bg-green-500' : 'bg-red-400'
-            }`}
+            className={`relative w-14 h-7 flex items-center rounded-full transition-colors duration-300 
+                 
+                ${checked ? "bg-green-500" : "bg-red-400"}`}
         >
             <span
-                className={`w-5 h-5 bg-white rounded-full shadow-md flex items-center justify-center transform transition-transform duration-300 ${
-                    checked ? 'translate-x-6' : 'translate-x-0'
-                }`}
+                className={`w-6 h-6 bg-white rounded-full shadow-md flex items-center justify-center 
+                    transform transition-transform duration-300 ease-in-out
+                    ${checked ? "translate-x-7" : "translate-x-1"}`}
             >
                 {checked ? (
                     <Check className="w-4 h-4 text-green-500" />
@@ -31,3 +33,4 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ checked, onChange }) => {
 };
 
 export default ToggleSwitch;
+

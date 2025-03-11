@@ -54,7 +54,7 @@ export default function Modal({
                             <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                                 <div className="flex justify-between items-center mb-4">
                                     {title && (
-                                        <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                                        <Dialog.Title as="h2" className="text-2xl font-bold text-gray-900 ">
                                             {title}
                                         </Dialog.Title>
                                     )}

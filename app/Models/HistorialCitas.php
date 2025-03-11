@@ -9,10 +9,12 @@ class HistorialCitas extends Model
 {
 
     protected $fillable = [
+        'doctor_id',
         'patient_id',
         'fecha',
         'hora',
         'status',
+        'tipo',
         'nota'
     ];
 
@@ -20,8 +22,13 @@ class HistorialCitas extends Model
     use HasFactory;
 
     // Relación con el modelo User (un historial de cita pertenece a un usuario)
-    public function users()
+    public function patient()
     {
         return $this->belongsTo(User::class, 'patient_id');
+    }
+
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 }

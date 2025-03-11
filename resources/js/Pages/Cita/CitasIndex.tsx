@@ -1,10 +1,10 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from "@inertiajs/react";
-import { Calendar, UserPlus } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import Pagination from '@/Components/Table/Pagination';
 import CustomTable from '@/Components/Table/CustomTable';
 import SearchBar from '@/Components/Table/SearchBar';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useDeleteItem } from '@/Components/hooks/useDeleteItem';
 import { Inertia } from '@inertiajs/inertia';
 import Modal from '@/Components/ui/Modal';
@@ -15,12 +15,29 @@ import FiltrosPopover from '@/Components/Table/FiltrosPopover';
 import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableButton from '@/Components/Form/ReusableButton';
 import { Cita, CitasPageProps } from '@/types';
-import { useAdvancedTablePagination } from '@/Components/hooks/useAdvancedTablePagination';
+import { useFilters } from '@/Components/hooks/useFilters';
+import { usePerPage } from '@/Components/hooks/usePerPage';
+import RoleGuard from '@/Components/auth/RoleGuard';
 
 
 
 const columnsCitas = [
-    { label: 'Paciente', key: 'users.name' },  // Funciona con propiedades anidadas
+    { label: 'Paciente', key: 'patient.name' },
+    { label: 'Dentista', key: 'doctor.name' },
+    { label: 'Fecha', key: 'fecha', format: formatDate },
+    { label: 'Hora', key: 'hora', format: formatHora },
+    {
+        label: 'Estado', key: 'status', format: (status: string) => (
+            <span className={getEventStyle(status)}>
+                {status}
+            </span>
+        )
+    },
+];
+
+const columnsCitasDentista = [
+    { label: 'Paciente', key: 'patient.name' },
+    { label: 'Servicio', key: 'tipo' },
     { label: 'Fecha', key: 'fecha', format: formatDate },
     { label: 'Hora', key: 'hora', format: formatHora },
     {
@@ -33,9 +50,8 @@ const columnsCitas = [
 ];
 
 const CitasIndex = () => {
-    const { citas } = usePage<CitasPageProps>().props;
 
-    
+    const { citas, citasDentista } = usePage<CitasPageProps>().props;
 
     const { isOpen: isEditModalOpen, openModal: openEditModal, closeModal: closeEditModal } = useModal();
 
@@ -51,13 +67,11 @@ const CitasIndex = () => {
 
     const handleEdit = (id: number) => {
         const cita = citas.data.find(p => p.id === id);
-        console.log("Cita seleccionada:", cita); // Log para verificar
         if (cita) {
             setSelectedCita(cita);
-            console.log("Abriendo modal...");
-            openEditModal(); // Aquí debería activarse el modal
+            openEditModal();
         } else {
-            console.log("No se encontró la cita con el ID:", id);
+            console.log("No se encontró la cita");
         }
     };
 
@@ -66,24 +80,25 @@ const CitasIndex = () => {
         resourceName: 'cita',
     });
 
-    const { perPage, status, date, isLoading, handlePerPageChange, handleSearchChange, handleStatusChange, handleDateChange } = useAdvancedTablePagination({
-        initialPerPage: 10,
-        path: '/citas',
-        resourceKey: 'citas',
-    });
+    const { filters, isLoading: isFiltersLoading, handleFilterChange } = useFilters("citas");
+    const { search, status, date } = filters;
+    const { perPage, handlePerPageChange, isLoading: isPerPageLoading } = usePerPage(10, "citas");
+
+    const isLoading = isFiltersLoading || isPerPageLoading;
 
     return (
         <AuthenticatedLayout
             header={
                 <div className="flex justify-between items-center">
                     <h2 className="text-2xl font-bold text-gray-800">Citas</h2>
-                   
-                    <ReusableButton
-                        onClick={handleCreate}
-                    >
-                        <Calendar className=" w-5 h-5 mr-1" />
-                        Agregar Cita
-                    </ReusableButton>
+                    <RoleGuard allowedRoles={['admin']}>
+                        <ReusableButton
+                            onClick={handleCreate}
+                        >
+                            <Calendar className=" w-5 h-5 mr-1" />
+                            Agregar Cita
+                        </ReusableButton>
+                    </RoleGuard>
                 </div>
             }
         >
@@ -93,23 +108,25 @@ const CitasIndex = () => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white shadow sm:rounded-lg">
                         <div className="p-6">
-
                             <div className="flex flex-wrap py-4">
                                 <div className="w-full sm:w-1/2 my-2 md:my-0">
                                     <SearchBar
                                         placeHolder="Buscar cita..."
-                                        onSearch={handleSearchChange}
+                                        value={search}
+                                        onChange={(e) => handleFilterChange('search', e.target.value)}
                                     />
+
+
                                 </div>
                                 <div className='w-full sm:w-1/2 my-2 md:my-0'>
                                     <div className='ml-auto w-full flex  justify-end gap-4'>
-                                        <div >
-                                        <FiltrosPopover 
-                                            date={date}
-                                            status={status}
-                                            handleDateChange={handleDateChange}
-                                            handleStatusChange={handleStatusChange}
-                                        />
+                                        <div className='mt-1'>
+                                            <FiltrosPopover
+                                                date={date}
+                                                status={status}
+                                                handleDateChange={(newDate) => handleFilterChange('date', newDate)}
+                                                handleStatusChange={(newStatus) => handleFilterChange('status', newStatus)}
+                                            />
                                         </div>
                                         <div className='w-24' >
                                             <ReusableSelect
@@ -135,22 +152,41 @@ const CitasIndex = () => {
                                 </div>
                             ) : (
                                 <>
-                                    {citas.data.length === 0 ? (
-                                        <div className="text-center py-4 text-gray-500">
-                                            No hay citas registradas actualmente.
-                                        </div>
-                                    ) : (
+                                    <RoleGuard allowedRoles={['admin']}>
+                                        {citas.data.length === 0 ? (
+                                            <div className="text-center py-4 text-gray-500">
+                                                No hay citas registradas actualmente.
+                                            </div>
+                                        ) : (
 
-                                        <CustomTable
-                                            headers={columnsCitas}
-                                            data={citas.data}
-                                            onView={handleView}
-                                            onEdit={handleEdit}
-                                            onDelete={handleDelete}
-                                            showActions
-                                        />
+                                            <CustomTable
+                                                headers={columnsCitas}
+                                                data={citas.data}
+                                                onView={handleView}
+                                                onEdit={handleEdit}
+                                                onDelete={handleDelete}
+                                                showActions
+                                            />
 
-                                    )}
+                                        )}
+                                    </RoleGuard>
+                                    <RoleGuard allowedRoles={['doctor']}>
+                                        {citasDentista.data.length === 0 ? (
+                                            <div className="text-center py-4 text-gray-500">
+                                                No hay citas registradas actualmente.
+                                            </div>
+                                        ) : (
+
+                                            <CustomTable
+                                                headers={columnsCitasDentista}
+                                                data={citasDentista.data}
+                                                onView={handleView}
+                                                onDelete={handleDelete}
+                                                showActions
+                                            />
+
+                                        )}
+                                    </RoleGuard>
                                 </>
                             )}
 
@@ -164,18 +200,12 @@ const CitasIndex = () => {
                 </div>
             </div>
 
-
-
-
-
-
-
             {/* Modal para editar pacientes */}
             <Modal
 
                 isOpen={isEditModalOpen}
                 onClose={closeEditModal}
-                title="Editar detalles de la cita"
+                title="Edición de la Cita"
                 preventOutsideClick
             >
                 {selectedCita && (

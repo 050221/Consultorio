@@ -1,55 +1,76 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import { Phone, Mail, Calendar } from 'lucide-react'; // Usamos los iconos de lucide-react
+import { Phone, Mail, Calendar, Cake, User } from 'lucide-react';
 import LabelValue from '@/Components/LabelValue';
-import { PacienteFormProps } from '@/types';
+import { PacienteViewProps } from '@/types';
+import { formatTimestamp } from '@/Components/utils/dateUtils';
 
 
-
-const ViewPaciente: React.FC<PacienteFormProps> = ({ paciente, onClose }) => {
+const ViewPaciente: React.FC<PacienteViewProps> = ({ paciente }) => {
     return (
         <>
             <Head title="Detalles del Paciente" />
-
-            <hr className="border-sky-500 w-[95%]" />
+            <hr className=" border border-sky-500" />
 
             {/* Información del Paciente */}
-            <div className="space-y-4 mt-6 ">
-                <LabelValue
-                    label="Nombre"
-                    value={paciente.name}
-                />
-                <LabelValue
-                    label="Correo Electrónico"
-                    value={paciente.email}
-                    icon={<Mail className="text-blue-500 mr-2" />} // Icono para correo
-                />
-                <LabelValue
-                    label="Teléfono"
-                    value={paciente.phone}
-                    icon={<Phone className="text-green-500 mr-2" />} // Icono para teléfono
-                />
-                <LabelValue
-                    label="Fecha de Registro"
-                    value={new Date(paciente.created_at).toLocaleDateString()}
-                    icon={<Calendar className="text-yellow-500 mr-2" />} // Icono para fecha
-                />
-            </div>
+            <div className="grid gap-4 mt-6 grid-cols-1 ">
+                {/* Nombre */}
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-blue-50 rounded-lg">
+                        <User className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Nombre</p>
+                        <p className="text-lg font-medium text-gray-900">{paciente.name}</p>
+                    </div>
+                </div>
 
-            {/* Botón de Cerrar */}
-            <div className="flex justify-end">
-                <button
-                    onClick={onClose}
-                    className="flex items-center px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-all duration-300"
-                >
-                    <span className="mr-2">Cerrar</span> {/* Texto para el botón */}
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-5 w-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+                {/* fecha nacimiento */}
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-orange-50 rounded-lg">
+                        <Cake className="w-6 h-6 text-orange-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Fecha de Nacimiento</p>
+                        <p className="text-lg font-medium text-gray-900">{new Date(paciente.birthdate).toLocaleDateString()}</p>
+                    </div>
+                </div>
 
+                {/* Teléfono */}
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-green-50 rounded-lg">
+                        <Phone className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Teléfono</p>
+                        <p className="text-lg font-medium text-gray-900">{paciente.phone}</p>
+                    </div>
+                </div>
+
+                {/* Email */}
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-red-50 rounded-lg">
+                        <Mail className="w-6 h-6 text-red-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Correo Electronico</p>
+                        <p className="text-lg font-medium text-gray-900">{paciente.email}</p>
+                    </div>
+                </div>
+
+                {/* fecha registro */}
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-yellow-50 rounded-lg">
+                        <Calendar className="w-6 h-6 text-yellow-600" />
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Fecha de Registro</p>
+                        <p className="text-lg font-medium text-gray-900">{formatTimestamp(paciente.created_at)}</p>
+                    </div>
+                </div>
+            </div>
         </>
+
     );
 };
 

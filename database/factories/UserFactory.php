@@ -29,9 +29,58 @@ class UserFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => fake()->randomElement(['Admin', 'Doctor', 'Patient']) ?? 'patient',
+            'role' => $this->faker->randomElement([ 'admin', 'doctor', 'receptionist', 'patient']),
+            'activo' => $this->faker->boolean(90), // 90% de usuarios activos
+            'birthdate' => $this->faker->date('Y-m-d', '2003-12-31'), // Fechas entre 1900 y 2003
+            'specialty' => null, // Solo para doctores
+            'availability' => null, // Solo para doctores
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function doctor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'doctor',
+            'specialty' => $this->faker->randomElement(['Ortodoncia', 'Endodoncia', 'Periodoncia']),
+            'availability' => json_encode([
+                'lunes' => ['09:00-13:00', '15:00-18:00'],
+                'martes' => ['10:00-14:00'],
+            ]),
+        ]);
+    }
+
+     /**
+     * Estado para usuarios pacientes.
+     */
+    public function paciente(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'patient',
+            'specialty' => null,
+            'availability' => null,
+        ]);
+    }
+
+    public function receptionist(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'receptionist',
+            'specialty' => null,
+            'availability' => null,
+        ]);
+    }
+
+     /**
+     * Estado para usuarios admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+            'specialty' => null,
+            'availability' => null,
+        ]);
     }
 
     /**

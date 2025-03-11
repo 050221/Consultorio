@@ -6,38 +6,31 @@ export interface User {
     role: string;
     activo: boolean;
     created_at: string;
-    email_verified_at?: string;
+    birthdate: string;
+    email_verified_at?:string;
 }
+
+
+export interface Doctor extends User {
+    specialty: string;
+    availability: string;
+}
+
+export type Recepcionista = Omit<User, 'birthdate'>;
 
 export interface Cita {
     id: number;
     patient_id: number;
+    doctor_id: number;
     fecha: string;
     hora: string;
+    tipo: string;
     status: string;
     nota?: string;
     created_at: string;
-    users: User; 
+    patient: User;  
+    doctor: Doctor; 
 }
-
-export interface HistorialPageProps extends PageProps {
-    historialC: {
-        data: Cita[]; // Datos paginados
-        links: PaginationLink[];
-    };
-    [key: string]: any; 
-}
-
-
-export interface CitasPageProps extends PageProps {
-    citas: {
-        data: Cita[]; // Datos paginados
-        links: PaginationLink[];
-    };
-    [key: string]: any; 
-}
-
-
 
 
 // por defecto
@@ -46,7 +39,7 @@ export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
     auth: {
-        user: User; // Información del usuario autenticado
+        user: User | Doctor; // Información del usuario autenticado
         roles: string[]; // Roles del usuario
         permissions: string[]; // Permisos del usuario
     };
@@ -68,19 +61,21 @@ export interface CitasPageProps extends PageProps {
         data: Cita[]; // Datos paginados
         links: PaginationLink[];
     };
+    citasDentista:{
+        data: Cita[];
+        links: PaginationLink[];
+    }
     [key: string]: any; 
 }
 
-export interface PaginationLink {
-    url: string | null;
-    label: string;
-    active: boolean;
-}
+
+
 
 //archivo  create 
 type CitaPageProps = PageProps<{
     citas: Cita[];
-    users: User[];
+    pacientes: User[];
+    doctores: Doctor[];
 }>;
 
 
@@ -103,9 +98,37 @@ export interface DashboardPageProps extends PageProps {
         data: Cita[]; // Datos paginados
         links: PaginationLink[]; // Links para la paginación
     };
-    [key: string]: any; 
+    totalPacientes:number;
+    totalDentistas:number;
+    totalCitas:number;
+    totalCitasConfirmadas:number;
+    totalCitasPendientes:number;
+    totalCitasCancelada:number;
+    destistasMasCitas: DentistaMasCitas[];
+    totalCitasPorMes:TotalCitasPorMes[];
+    citasUser:Cita[];
+    citasDentista:Cita[];
+    citasDentistaHoy: {
+        data: Cita[]; // Datos paginados
+        links: PaginationLink[]; // Links para la paginación
+    };
+    totalCitasDentista:number;
+    totalCitasConfirmadasDentista:number;
+    totalCitasPendientesDentista:number;
+    totalCitasCanceladaDentista:number;
 }
-//fin citas
+
+type DentistaMasCitas = {
+    name: string;
+    citas: number;
+  };
+  
+  type TotalCitasPorMes = {
+    mes: string;
+    citas: number;
+  };
+
+//fin Dashboard 
 
 
 
@@ -119,10 +142,70 @@ export interface PacientesPageProps extends PageProps {
     [key: string]: any; 
 }
 
-//archivo edit y view pacientes
+//archivo edit  pacientes
 export interface PacienteFormProps {
     paciente: User;  
-    onClose: () => void;
+    onClose: () => void; 
+}
+
+//archivo  view pacientes
+export interface PacienteViewProps {
+    paciente: User;  
+    
+}
+
+
+// inicio dentistas
+export interface DentistasPageProps extends PageProps {
+    dentistas: {
+        data: Doctor[]; 
+        links: PaginationLink[]; 
+    };
+    [key: string]: any; 
+}
+
+export interface DentistaFormProps {
+    dentista: Doctor;  
+}
+
+
+
+//inicio Recepcionista
+// index Recepcionista
+export interface RecepcionistasPageProps extends PageProps {
+    recepcionistas: {
+        data: Recepcionista[]; 
+        links: PaginationLink[]; 
+    };
+    [key: string]: any; 
+}
+
+//archivo edit  Recepcionista
+export interface RecepcionistaFormProps {
+    recepcionista: Recepcionista;  
+    onClose: () => void; 
+}
+
+//archivo  view Recepcionista
+export interface RecepcionistaViewProps {
+    recepcionista: Recepcionista;  
+    
+}
+
+export interface HistorialPageProps extends PageProps {
+    historialC: {
+        data: Cita[]; // Datos paginados
+        links: PaginationLink[];
+    };
+    historialCDoctor: {
+        data: Cita[]; // Datos paginados
+        links: PaginationLink[];
+    };
+    citasPatient: {
+        data: Cita[]; // Datos paginados
+        links: PaginationLink[];
+    };
+    [key: string]: any; 
 }
 
 
@@ -133,5 +216,3 @@ export interface PaginationLink {
     label: string;
     active: boolean;
 }
-
-

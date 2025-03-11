@@ -30,25 +30,36 @@ class MoveExpiredAppointments extends Command
     public function handle()
     {
         $now = Carbon::now(); // Fecha actual
+
         // Obtener citas con fecha anterior a hoy
         $citasParaHistorial = Citas::whereIn('status', ['Confirmada', 'Cancelada'])
-        ->where(function ($query) use ($now) {
-            $query->where('fecha', '<', $now->toDateString())
-                  ->orWhere(function ($query) use ($now) {
-                      $query->where('fecha', '=', $now->toDateString())
-                            ->where('hora', '<', $now->toTimeString());
-                  });
-        })
-        ->get();
+            ->where(function ($query) use ($now) {
+                $query->where('fecha', '<', $now->toDateString())
+                    ->orWhere(function ($query) use ($now) {
+                        $query->where('fecha', '=', $now->toDateString())
+                              ->where('hora', '<', $now->toTimeString());
+                    });
+            })
+            ->get();
+
+        if ($citasParaHistorial->isEmpty()) {
+            $this->info('No hay citas expiradas para mover.');
+            return;
+        }
 
         foreach ($citasParaHistorial as $cita) {
             try {
+                // Determinar el nuevo estado según el status actual de la cita
+                $nuevoStatus = ($cita->status === 'Cancelada') ? 'Cancelada' : 'Completada';
+
                 // Crear el registro en historial_citas
                 HistorialCitas::create([
+                    'doctor_id' => $cita->doctor_id,
                     'patient_id' => $cita->patient_id,
                     'fecha' => $cita->fecha,
                     'hora' => $cita->hora,
-                    'status' => $cita->status,
+                    'status' => $nuevoStatus,  
+                    'tipo' => $cita->tipo,
                     'nota' => $cita->nota,
                 ]);
 

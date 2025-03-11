@@ -16,10 +16,14 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
         phone: '',
         password: '',
         password_confirmation: '',
+        birthdate: '',
+        role: 'patient'
+
     });
 
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
 
     const submit = (e: React.FormEvent) => {
@@ -31,6 +35,10 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
                     text: 'El paciente se ha registrado exitosamente.',
                     icon: 'success',
                     confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'bg-sky-500 text-white font-semibold py-2 px-6 rounded-lg hover:bg-sky-600 focus:ring-4 focus:ring-sky-300 transition-all duration-200 ease-in-out cursor-pointer border-2 border-sky-300 shadow-md hover:shadow-lg active:scale-95',
+                    },
+                    buttonsStyling: false,
                 });
                 reset();
                 onClose();
@@ -50,7 +58,7 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
 
     return (
         <>
-            <Head title="Nuevo paciente" />
+            <Head title="Nuevo Paciente" />
             <form onSubmit={submit} className="space-y-4">
                 <div>
                     <InputLabel htmlFor="name" value="Nombre" />
@@ -78,6 +86,20 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
                         required
                     />
                     <InputError message={errors.phone} className="mt-2" />
+                </div>
+
+                <div>
+                    <InputLabel htmlFor="birthdate" value="Fecha de nacimiento" />
+                    <TextInput
+                        id="birthdate"
+                        type="date"
+                        name="birthdate"
+                        value={data.birthdate}
+                        className="mt-1 block w-full"
+                        onChange={(e) => setData('birthdate', e.target.value)}
+                        required
+                    />
+                    <InputError message={errors.birthdate} className="mt-2" />
                 </div>
 
                 <div>
@@ -112,19 +134,24 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div>
-                    <InputLabel htmlFor="password_confirmation" value="Confirmar contraseña" />
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        onChange={(e) => setData('password_confirmation', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
+                <div >
+                    <div className="relative">
+                        <InputLabel htmlFor="password_confirmation" value="Confirmar contraseña" />
+                        <TextInput
+                            id="password_confirmation"
+                            type={showPasswordConfirmation ? 'text' : 'password'}
+                            name="password_confirmation"
+                            value={data.password_confirmation}
+                            className="mt-1 block w-full "
+                            onChange={(e) => setData('password_confirmation', e.target.value)}
+                            required
+                        />
+                        <ButtonVisibility
+                            onToggle={() => setShowPasswordConfirmation((prev) => !prev)}
+                            isPasswordVisible={showPasswordConfirmation}
+                        />
+                        <InputError message={errors.password_confirmation} className="mt-2" />
+                    </div>
                 </div>
 
                 <div className="flex justify-end gap-4">

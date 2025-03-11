@@ -1,12 +1,12 @@
 import React from 'react';
-
-import { ChevronDown, ChevronUp, Eye, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Eye, Pencil, Trash2, MoreVertical } from 'lucide-react';
 import { useSortableData } from '../hooks/useSortableData';
-import ReusableButton from '../Form/ReusableButton';
 import RoleGuard from '../auth/RoleGuard';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+
 
 interface TableColumn {
-    key: string; // Clave del objeto en 'data', puede ser anidada como 'users.name'
+    key: string;
     label: string;
     format?: (value: any) => React.ReactNode;
 }
@@ -23,12 +23,8 @@ interface TableProps {
     actionLabels?: { view?: string; edit?: string; delete?: string };
 }
 
-// Función para obtener valores anidados
 const getNestedValue = (obj: any, path: string): any => {
-    return path.split('.').reduce((acc, part) =>
-        acc && acc[part] !== undefined ? acc[part] : 'N/A',
-        obj
-    );
+    return path.split('.').reduce((acc, part) => acc && acc[part] !== undefined ? acc[part] : 'N/A', obj);
 };
 
 const CustomTable: React.FC<TableProps> = ({
@@ -58,28 +54,23 @@ const CustomTable: React.FC<TableProps> = ({
                                         <div>{header.label}</div>
                                         <div className="flex flex-col items-center">
                                             <ChevronUp
-                                                className={`h-3.5 w-3.5 cursor-pointer ${sortOptions.key === header.key && sortOptions.order === 'asc' ? 'text-sky-600' : ''
-                                                    }`}
+                                                className={`h-3.5 w-3.5 cursor-pointer ${sortOptions.key === header.key && sortOptions.order === 'asc' ? 'text-sky-600' : ''}`}
                                                 onClick={() => requestSort(header.key)}
                                             />
                                             <ChevronDown
-                                                className={`h-3.5 w-3.5 cursor-pointer ${sortOptions.key === header.key && sortOptions.order === 'desc' ? 'text-sky-600' : ''
-                                                    }`}
+                                                className={`h-3.5 w-3.5 cursor-pointer ${sortOptions.key === header.key && sortOptions.order === 'desc' ? 'text-sky-600' : ''}`}
                                                 onClick={() => requestSort(header.key)}
                                             />
                                         </div>
                                     </div>
                                 </th>
                             ))}
-                        {showActions && <th className="px-4 py-2">Acciones</th>}
+                        {showActions && <th className="px-4 py-2 text-center">Acciones</th>}
                     </tr>
                 </thead>
                 <tbody className="bg-white">
                     {sortedData.map((row, rowIndex) => (
-                        <tr
-                            key={rowIndex}
-                            className="border-b even:bg-gray-50 hover:bg-gray-100"
-                        >
+                        <tr key={rowIndex} className="border-b even:bg-gray-50 hover:bg-gray-100">
                             {headers
                                 .filter(header => !omitKeys.includes(header.key))
                                 .map((header, cellIndex) => (
@@ -89,41 +80,32 @@ const CustomTable: React.FC<TableProps> = ({
                                             : getNestedValue(row, header.key)}
                                     </td>
                                 ))}
-                            {showActions && (
-                                <td className="px-4 py-2 flex gap-2">
-                                    {onView && (
-                                        <ReusableButton
-                                            onClick={() => onView(row.id)}
-                                            className=" tooltip"
-                                            title="Detalles"
-                                        >
-                                            <Eye className="h-5 w-4 mr-1" />
-                                            {actionLabels.view}
-                                        </ReusableButton>
-                                    )}
-                                    {onEdit && (
-                                        <ReusableButton
-                                            onClick={() => onEdit(row.id)}
-                                            className=" tooltip"
-                                            color="orange"
-                                            title="Editar"
-                                        >
-                                            <Pencil className="h-5 w-4 mr-1" />
-                                            {actionLabels.edit}
-                                        </ReusableButton>
-                                    )}
-                                    {onDelete && (
-                                        <RoleGuard allowedRoles={['Admin']}>
-                                            <ReusableButton
-                                                onClick={() => onDelete(row.id)}
-                                                color="red"
-                                                title="Eliminar"
-                                            >
-                                                <Trash2 className="h-5 w-4 mr-1" />
-                                                {actionLabels.delete}
-                                            </ReusableButton>
-                                        </RoleGuard>
-                                    )}
+                          {showActions && (
+                                <td className="px-4 py-3 text-center">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger className="p-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition shadow-sm">
+                                            <MoreVertical size={18} />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end" className="bg-white border border-gray-300 rounded-lg shadow-md p-2">
+                                            {onView && (
+                                                <DropdownMenuItem className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer" onClick={() => onView(row.id)}>
+                                                    <Eye className="w-5 h-5 text-blue-500" /> {actionLabels.view}
+                                                </DropdownMenuItem>
+                                            )}
+                                            {onEdit && (
+                                                <DropdownMenuItem className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer" onClick={() => onEdit(row.id)}>
+                                                    <Pencil className="w-5 h-5 text-orange-500" /> {actionLabels.edit}
+                                                </DropdownMenuItem>
+                                            )}
+                                            {onDelete && (
+                                                <RoleGuard allowedRoles={['admin']}>
+                                                    <DropdownMenuItem className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-red-100 rounded-md cursor-pointer" onClick={() => onDelete(row.id)}>
+                                                        <Trash2 className="w-5 h-5 text-red-500" /> {actionLabels.delete}
+                                                    </DropdownMenuItem>
+                                                </RoleGuard>
+                                            )}
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </td>
                             )}
                         </tr>

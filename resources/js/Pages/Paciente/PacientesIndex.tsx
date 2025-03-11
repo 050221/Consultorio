@@ -5,24 +5,23 @@ import CustomTable from '@/Components/Table/CustomTable';
 import Modal from '@/Components/ui/Modal';
 import Pagination from '@/Components/Table/Pagination';
 import CreatePacienteForm from './CreatePacienteForm';
-import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import useModal from '@/Components/ui/UseModal';
 import EditPacienteForm from './EditPacienteForm';
 import { UserPlus } from 'lucide-react';
 import SearchBar from '@/Components/Table/SearchBar';
-import { useBasicTablePagination } from '@/Components/hooks/useBasicTablePagination';
-import { useDeleteItem } from '@/Components/hooks/useDeleteItem';
 import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableButton from '@/Components/Form/ReusableButton';
 import ViewPaciente from './ViewPaciente';
 import { User, PacientesPageProps } from '@/types';
 import StatusBadge from '@/Components/ui/StatusBadge';
+import { usePerPage } from '@/Components/hooks/usePerPage';
+import { useFilters } from '@/Components/hooks/useFilters';
 
 
 const columnsPacientes = [
     { label: 'Nombre', key: 'name' },
-    { label: 'Correo', key: 'email' },
     { label: 'Telefono', key: 'phone', },
+    { label: 'Correo', key: 'email' },
     {
         key: 'activo',
         label: 'Estado',
@@ -31,6 +30,7 @@ const columnsPacientes = [
 ];
 
 const PacientesIndex = () => {
+    
     const { pacientes } = usePage<PacientesPageProps>().props;
 
     const { isOpen: isCreateModalOpen, openModal: openCreateModal, closeModal: closeCreateModal } = useModal();
@@ -58,17 +58,12 @@ const PacientesIndex = () => {
         }
     };
 
-    // Función para manejar la eliminación con Swal
-    const { handleDelete } = useDeleteItem({
-        baseUrl: '/pacientes',
-        resourceName: 'paciente',
-    });
 
-    const { perPage, isLoading, handlePerPageChange, handleSearchChange } = useBasicTablePagination({
-        initialPerPage: 10,
-        path: '/pacientes',
-        resourceKey: 'pacientes',
-    });
+    const { filters, isLoading: isFiltersLoading, handleFilterChange } = useFilters("pacientes", { search: "" });
+    const { perPage, handlePerPageChange, isLoading: isPerPageLoading } = usePerPage(10, "pacientes");
+
+
+    const isLoading = isFiltersLoading || isPerPageLoading;
 
     return (
         <AuthenticatedLayout
@@ -97,7 +92,8 @@ const PacientesIndex = () => {
                                 <div className="w-full sm:w-1/2 my-2 md:my-0">
                                     <SearchBar
                                         placeHolder="Buscar paciente..."
-                                        onSearch={handleSearchChange}
+                                        value={filters.search}
+                                        onChange={(e) => handleFilterChange("search", e.target.value)}
                                     />
                                 </div>
 
@@ -141,7 +137,6 @@ const PacientesIndex = () => {
                                             data={pacientes.data}
                                             onView={handleView}
                                             onEdit={handleEdit}
-                                            onDelete={handleDelete}
                                             showActions
                                         />
                                     )}
@@ -163,7 +158,7 @@ const PacientesIndex = () => {
             <Modal
                 isOpen={isCreateModalOpen}
                 onClose={closeCreateModal}
-                title="Agregar nuevo paciente"
+                title="Agregar Nuevo Paciente"
                 preventOutsideClick
             >
                 <CreatePacienteForm
@@ -180,7 +175,6 @@ const PacientesIndex = () => {
                 {selectedPaciente && (
                     <ViewPaciente
                         paciente={selectedPaciente}
-                        onClose={closeViewModal}
                     />
                 )}
             </Modal>
@@ -189,7 +183,7 @@ const PacientesIndex = () => {
             <Modal
                 isOpen={isEditModalOpen}
                 onClose={closeEditModal}
-                title="Editar paciente"
+                title="Edición de Paciente"
                 preventOutsideClick
             >
                 {selectedPaciente && (

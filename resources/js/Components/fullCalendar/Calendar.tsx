@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover
 import './estilos.css';
 import { Cita } from '@/types';
 
+
 interface CalendarProps {
   citas: Cita[];
 }
@@ -19,7 +20,7 @@ const CitasCalendar:React.FC<CalendarProps> = ({
   const calendarEvents = useMemo(() => {
     return citas.map((cita) => ({
       id: cita.id.toString(),
-      title: `${getStatusEmoji(cita.status)} ${cita.users.name} `,
+      title: `${getStatusEmoji(cita.status)} ${cita.patient.name || 'Paciente sin nombre'}`,
       start: cita.hora
         ? `${cita.fecha}T${cita.hora}`
         : cita.fecha,
@@ -48,10 +49,14 @@ const CitasCalendar:React.FC<CalendarProps> = ({
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">Detalles de la Cita</h3>
             <div className="grid grid-cols-2 gap-2">
-              <span className="font-medium">
-                {'Paciente:'}
-              </span>
-              <span>{usuario?.name || 'No especificado'}</span>
+              <span className="font-medium">Paciente:</span>
+              <span>{cita.patient?.name  || 'No especificado'}</span>
+
+              <span className="font-medium">Dentista:</span>
+              <span>{cita.doctor?.name  || 'No especificado'}</span>
+
+              <span className="font-medium">Servicio:</span>
+              <span>{cita.tipo}</span>
 
               <span className="font-medium">Fecha:</span>
               <span>{formatDate(cita.fecha)}</span>

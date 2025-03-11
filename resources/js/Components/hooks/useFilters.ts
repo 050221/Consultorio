@@ -2,6 +2,40 @@ import { useState, useCallback } from "react";
 import debounce from "lodash/debounce";
 import { router } from "@inertiajs/react";
 
+export const useFilters = (routeName: string, initialFilters: Record<string, string > = {}) => {
+    const [filters, setFilters] = useState(initialFilters);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const applyFilters = useCallback(
+        debounce((updatedFilters) => {
+            setIsLoading(true);
+            router.get(
+                route(routeName),
+                updatedFilters,
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onFinish: () => setIsLoading(false),
+                }
+            );
+        }, 300),
+        [routeName]
+    );
+
+    const handleFilterChange = (key: string, value: string ) => {
+        const updatedFilters = { ...filters, [key]: value };
+        setFilters(updatedFilters);
+        applyFilters(updatedFilters);
+    };
+
+    return { filters, isLoading, handleFilterChange };
+};
+
+/*
+import { useState, useCallback } from "react";
+import debounce from "lodash/debounce";
+import { router } from "@inertiajs/react";
+
 export const useFilters = (routeName: string) => {
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
@@ -44,3 +78,4 @@ export const useFilters = (routeName: string) => {
 
     return { search, status, date, isLoading, handleFilterChange };
 };
+*/

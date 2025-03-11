@@ -35,17 +35,24 @@ export const useDeleteItem = ({
             showCancelButton: true,
             confirmButtonText: 'Sí, eliminar',
             cancelButtonText: 'Cancelar',
+            customClass: {
+                confirmButton: 'bg-sky-500 text-white font-semibold py-2 px-6 rounded hover:bg-sky-600 focus:ring-2 focus:ring-sky-300 transition-all duration-200 ease-in-out cursor-pointer border-2 border-sky-300 shadow-md hover:shadow-lg active:scale-95 mr-2',
+                cancelButton: 'bg-gray-500 text-white font-semibold py-2 px-4 rounded hover:bg-gray-600',
+            },
+            buttonsStyling: false,
         });
 
         if (result.isConfirmed) {
             setIsDeleting(id);
             try {
                 await Inertia.delete(`${baseUrl}/${id}`);
-                
+
                 await Swal.fire({
                     title: 'Eliminado',
                     text: successMessage || `El ${resourceName} ha sido eliminado.`,
                     icon: 'success',
+                    showConfirmButton: false,
+                    
                 });
 
                 onSuccess?.();
@@ -54,8 +61,9 @@ export const useDeleteItem = ({
                     title: 'Error',
                     text: errorMessage || `No se pudo eliminar el ${resourceName}.`,
                     icon: 'error',
+                    showConfirmButton: false,
                 });
-                
+
                 onError?.(error);
             } finally {
                 setIsDeleting(null);

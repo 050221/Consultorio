@@ -13,9 +13,11 @@ class Citas extends Model
 
     protected $fillable = [
         'patient_id',
+        'doctor_id',
         'fecha',
         'hora',
         'status',
+        'tipo',
         'nota'
     ];
 
@@ -23,8 +25,19 @@ class Citas extends Model
 
     protected $table = 'citas';
 
-    public function users()
+    /**
+     * Relación con el usuario paciente.
+     */
+    public function patient()
     {
-        return $this->belongsTo(User::class, 'patient_id'); // Cada cita pertenece a un usuario
+        return $this->belongsTo(User::class, 'patient_id');
+    }
+
+    /**
+     * Relación con el usuario doctor.
+     */
+    public function doctor()
+    {
+        return $this->belongsTo(User::class, 'doctor_id');
     }
 }

@@ -39,12 +39,12 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
               aria-controls={`panel-${index}`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                <span className="text-lg font-semibold">{cita.users?.name || 'Paciente desconocido'}</span>
+                <span className="text-lg font-semibold">{cita.patient?.name || 'Paciente desconocido'}</span>
                 <span className="text-sm text-gray-500">{formatHora(cita.hora)}</span>
               </div>
               <div className="flex items-center">
                 {openPanel === index ? (
-                  <ChevronUp className="text-blue-700" />
+                  <ChevronUp className="text-sky-700" />
                 ) : (
                   <ChevronDown className="text-gray-400" />
                 )}
@@ -59,12 +59,16 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
               >
                 <ul className="space-y-3">
                   <li className="flex items-center">
-                    <span className="font-semibold w-24">Nombre:</span>
-                    <span>{cita.users?.name || 'No disponible'}</span>
+                    <span className="font-semibold w-24">Paciente:</span>
+                    <span>{cita.patient?.name || 'No disponible'}</span>
                   </li>
                   <li className="flex items-center">
-                    <span className="font-semibold w-24">Fecha:</span>
-                    <span>{formatDate(cita.fecha)}</span>
+                    <span className="font-semibold w-24">Dentista:</span>
+                    <span>{cita.doctor?.name || 'No disponible'}</span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="font-semibold w-24">Servicio:</span>
+                    <span>{cita.tipo || 'no disponible'}</span>
                   </li>
                   <li className="flex items-center">
                     <span className="font-semibold w-24">Hora:</span>
@@ -78,7 +82,7 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
                     <button
                       onClick={() => view(cita.id)}
                       className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-sky-500 to-blue-600 rounded-lg shadow-md hover:shadow-lg hover:from-sky-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 flex items-center gap-2 transition-all duration-300"
-                      aria-label={`Ver detalles de la cita con ${cita.users?.name || 'paciente desconocido'}`}
+                      aria-label={`Ver detalles de la cita con ${cita.patient?.name || 'paciente desconocido'}`}
                     >
                       <Info className="h-4 w-4" />
                       Ver detalles de la cita

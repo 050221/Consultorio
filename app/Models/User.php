@@ -33,7 +33,10 @@ class User extends Authenticatable
         'phone',
         'password',
         'role',
-        'activo'
+        'activo',
+        'birthdate',
+        'specialty',
+        'availability'
     ];
 
     /**
@@ -46,12 +49,22 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function citas()
+   /**
+     * Relación con citas en las que el usuario es paciente.
+     */
+    public function citasComoPaciente()
     {
         return $this->hasMany(Citas::class, 'patient_id');
-
-        // uno a muchos: un usuario puede tener muchas citas
     }
+
+    /**
+     * Relación con citas en las que el usuario es doctor.
+     */
+    public function citasComoDoctor()
+    {
+        return $this->hasMany(Citas::class, 'doctor_id');
+    }
+
 
     // Relación con el modelo HistorialCita (un usuario puede tener muchas citas)
     public function historialCitas()
@@ -67,6 +80,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'availability' => 'array',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];

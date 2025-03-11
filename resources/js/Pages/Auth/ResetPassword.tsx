@@ -30,7 +30,7 @@ export default function ResetPassword({
 
     return (
         <GuestLayout>
-            <Head title="Reset Password" />
+            <Head title="Restablecer contraseña" />
 
             <form onSubmit={submit}>
                 <div>

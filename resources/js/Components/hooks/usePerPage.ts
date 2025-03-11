@@ -1,24 +1,31 @@
 import { router } from "@inertiajs/react";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
+import debounce from "lodash/debounce";
 
 export const usePerPage = (initialPerPage = 10, routeName: string) => {
     const [perPage, setPerPage] = useState(initialPerPage);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handlePerPageChange = useCallback((value: number) => {
-        setPerPage(value);
-        setIsLoading(true);
+    
+    const handlePerPageChange = useCallback(
+        debounce((value: number) => {
+            setPerPage(value);
+            setIsLoading(true);
 
-        router.get(
-            route(routeName),
-            { per_page: value },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                onFinish: () => setIsLoading(false), // Actualizamos isLoading cuando la solicitud termina
-            }
-        );
-    }, [routeName]);
+            router.get(
+                route(routeName),
+                { per_page: value },
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onFinish: () => setIsLoading(false),
+                }
+            );
+        }, 300), 
+        [routeName]
+    );
 
-    return { perPage, handlePerPageChange, isLoading };
+    const memoizedPerPage = useMemo(() => perPage, [perPage]);
+
+    return { perPage: memoizedPerPage, handlePerPageChange, isLoading };
 };

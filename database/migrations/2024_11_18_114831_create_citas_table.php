@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('citas', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class, 'patient_id');
-           // $table->foreignId('patient_id')->constrained()->onDelete('cascade');
+            $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade'); // Relación con doctores
+            $table->foreignId('patient_id')->constrained('users')->onDelete('cascade'); // Relación con pacientes
             $table->date('fecha');
             $table->time('hora');
-            $table->string('status')->default('pending');
+            $table->string('tipo', 50)->nullable()->index();
+            $table->string('status')->default('Pendiente');
             $table->longText('nota')->nullable();
             $table->timestamps();
         });

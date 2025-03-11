@@ -9,6 +9,7 @@ use App\Models\HistorialCitas;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class CitasController extends Controller
@@ -23,20 +24,18 @@ class CitasController extends Controller
         $status = $request->input('status', ''); // Filtro por estado
         $date = $request->input('date', ''); // Filtro por fecha
 
-        $citas = Citas::with(['users' => function ($query) {
-            $query->select('id', 'name');
-        }])
-            ->select('id', 'patient_id', 'fecha', 'hora', 'status', 'nota')
+        $citas = Citas::with([
+            'patient:id,name',
+            'doctor:id,name,specialty'
+        ])
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo', 'nota')
             ->when($search, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('patient_id', 'like', "%{$search}%")
-                        ->orWhereHas('users', function ($q) use ($search) {
-                            $q->where('name', 'like', "%{$search}%");
-                        })
-                        ->orWhere('fecha', 'like', "%{$search}%")
-                        ->orWhere('status', 'like', "%{$search}%")
-                        ->orWhere('nota', 'like', "%{$search}%");
-                });
+                $query->whereHas('patient', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                    ->orWhereHas('doctor', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
             })
             ->when($status, function ($query, $statusFilter) {
                 $query->where('status', $statusFilter); // Filtro exacto por estado
@@ -44,22 +43,61 @@ class CitasController extends Controller
             ->when($date, function ($query, $dateFilter) {
                 $query->whereDate('fecha', $dateFilter); // Filtro exacto por fecha
             })
-            ->orderBy('fecha', 'desc')
-            ->paginate($perPage)
-            ->appends([
-                'search' => $search,
-                'status' => $status,
-                'date' => $date,
-                'per_page' => $perPage
-            ]); // Mantener parámetros en la URL para paginación
+            //->orderBy('fecha', 'desc')
+            ->orderBy('fecha', 'asc')
+            ->orderBy('hora', 'asc')
+            ->paginate($perPage);
 
-        // Retorna la vista con los datos necesarios para Inertia
+
+
+            $user = Auth::user(); // Obtiene el usuario autenticado (doctor)
+
+            $citasDentista = Citas::with([
+                'patient:id,name',  // Relación con el paciente
+                'doctor:id,name,specialty' // Relación con el doctor
+            ])
+            ->where('doctor_id', $user->id) // Filtrar por el doctor autenticado
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo', 'nota')
+            ->when(!empty($search), function ($query) use ($search) {
+                $query->whereHas('patient', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('doctor', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                });
+            })
+            ->when($status, function ($query) use ($status) {
+                $query->where('status', $status);
+            })
+            ->when($date, function ($query) use ($date) {
+                $query->whereDate('fecha', $date);
+            })
+            ->whereNotNull('fecha') // Evita problemas con `orderBy`
+            ->orderBy('fecha', 'asc')
+            ->orderBy('hora', 'asc') // Ordenar por hora ascendente dentro del mismo día
+            ->paginate($perPage);
+            
+            //dd($citasDentista);
+
+        
+
+
         return Inertia::render('Cita/CitasIndex', [
-            'citas' => $citas, // Datos paginados
-            'perPage' => $perPage, // Valor de registros por página
-            'search' => $search, // Término de búsqueda actual
-            'status' => $status, // Filtro de estado actual
-            'date' => $date, 
+            'citas' => $citas, 
+            'citasDentista' =>$citasDentista
+        ]);
+    }
+
+    public function show($id)
+    {
+        // Busca la cita por ID con las relaciones necesarias
+        $cita = Citas::with([
+            'patient:id,name,phone',
+            'doctor:id,name'
+        ])->findOrFail($id);
+
+        return Inertia::render('Cita/CitaView', [
+            'cita' => $cita,
         ]);
     }
 
@@ -69,24 +107,28 @@ class CitasController extends Controller
      */
     public function create()
     {
-        // Obtén los IDs de los pacientes que ya tienen citas
-        $patientIdsWithCitas = Citas::pluck('patient_id')->toArray();
-
-        // Filtra los pacientes excluyendo los IDs que ya tienen citas
-        $users = User::where('role', 'Patient')
-            ->whereNotIn('id', $patientIdsWithCitas)
+        // Obtén los pacientes con rol 'Patient'
+        $pacientes = User::where('role', 'patient')
             ->select('id', 'name')
+            ->orderBy('name')
             ->get();
 
-        // Obtén las citas con los usuarios relacionados
-        $citas = Citas::with(['users' => function ($query) {
-            $query->select('id', 'name');
-        }])
-            ->select('id', 'patient_id', 'fecha', 'hora', 'status')
+        // Obtén los doctores con rol 'Doctor'
+        $doctores = User::where('role', 'doctor')
+            ->select('id', 'name', 'specialty')
             ->get();
 
+        // Obtén las citas con información de paciente y doctor
+        $citas = Citas::with([
+            'patient:id,name',
+            'doctor:id,name,specialty'
+        ])->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo')
+            ->get();
+
+        // Retorna la vista con los datos
         return Inertia::render('Cita/CitasCreateForm', [
-            'users' => $users,
+            'pacientes' => $pacientes,
+            'doctores' => $doctores,
             'citas' => $citas,
         ]);
     }
@@ -102,55 +144,16 @@ class CitasController extends Controller
         // Crear la cita
         Citas::create([
             'patient_id' => $cita['patient_id'],
+            'doctor_id' => $cita['doctor_id'],
             'fecha' => $cita['fecha'],
             'hora' => $cita['hora'],
             'status' => $cita['status'],
+            'tipo' => $cita['tipo'],
             'nota' => $cita['nota'],
         ]);
 
         return redirect()->back()->with('success', 'Cita agendada exitosamente');
     }
-
-
-    /**
-     * Display the specified resource.
-     * 
-     *  public function show($id)
-    {
-        try {
-            $cita = Citas::with('users')->findOrFail($id);
-            
-            // Añade esto para ver qué está pasando
-            Log::info('Cita encontrada', ['cita' => $cita]);
-            
-            return Inertia::render('Cita/CitaView', [
-                'cita' => $cita,
-            ]);
-        } catch (\Exception $e) {
-            // Registra cualquier error
-            Log::error('Error en show de Citas', ['error' => $e->getMessage()]);
-            throw $e;
-        }
-    }
-     * 
-     */
-    public function show($id)
-    {
-
-        // Busca la cita por ID con los datos relacionados, si es necesario
-        $cita = Citas::with(['users' => function ($query) {
-            $query->select('id', 'name', 'phone');
-        }])
-            ->findOrFail($id);
-
-        // Log::info($cita);
-
-        // Retorna una vista de Inertia con los datos
-        return Inertia::render('Cita/CitaView', [
-            'cita' => $cita,
-        ]);
-    }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -187,49 +190,4 @@ class CitasController extends Controller
 
         return redirect()->back()->with('success', 'La cita fue eliminada exitosamente');
     }
-
-
-
-
-    /**
-     * Muestra el historial de citas
-     
-    public function historial_citas(Request $request)
-    {
-        $perPage = $request->input('per_page', 10); // Define el número de elementos por página con un valor predeterminado de 10.
-        $search = $request->input('search', '');
-    
-        // Registro de los parámetros en los logs
-        Log::info('Historial Citas - Parámetros recibidos:', [
-            'per_page' => $perPage,
-            'search' => $search,
-        ]);
-    
-        // Consulta simplificada solo con paginación
-        $citas = HistorialCitas::with(['users' => function ($query) {
-            $query->select('id', 'name', 'phone', 'email'); // Selecciona solo las columnas necesarias.
-        }])
-        ->select('id', 'patient_id', 'fecha', 'hora', 'status', 'nota')
-        ->when($search, function ($query, $search) {
-            $query->where(function ($query1) use ($search) {
-                $query1->where('patient_id', 'like', "%{$search}%")
-                    ->orWhereHas('users', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
-                    })
-                    ->orWhere('fecha', 'like', "%{$search}%")
-                    ->orWhere('status', 'like', "%{$search}%")
-                    ->orWhere('nota', 'like', "%{$search}%");
-            });
-        })
-        
-            ->paginate($perPage); // Aplica la paginación.
-    
-        // Retorna los datos a la vista Inertia
-        return Inertia::render('Cita/Historial_citas', [
-            'citas' => $citas,
-        ]);
-    }
-    */
-    
-    
 }

@@ -11,8 +11,8 @@
 export const formatTimestamp = (timestamp: string): string => {
   const date = new Date(timestamp);
   return date.toLocaleString('es-MX', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
+    dateStyle: 'long',
+    //timeStyle: 'short',
     timeZone: 'America/Mexico_City',
   });
 };
@@ -77,6 +77,8 @@ export const getEventStyle = (status: string) => {
       return 'rounded-lg bg-yellow-100 text-yellow-600 font-semibold p-1';
     case 'cancelada':
       return 'rounded-lg bg-red-100 text-red-700 font-semibold line-through p-1';
+      case 'completada':
+        return 'rounded-lg bg-green-100 text-green-700 font-semibold line-through p-1';
     default:
       return 'rounded-lg bg-gray-100 text-gray-800 p-1';
   }

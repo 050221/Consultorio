@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('historial_citas', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(\App\Models\User::class, 'doctor_id');
             $table->foreignIdFor(\App\Models\User::class, 'patient_id');
             $table->date('fecha')->index();
             $table->time('hora');
             $table->string('status')->index();
+            $table->string('tipo');
             $table->longText('nota')->nullable();
             $table->timestamps();
         });

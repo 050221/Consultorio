@@ -20,14 +20,14 @@ class UserSeeder extends Seeder
             'name' => 'administrador',
             'email' => 'administrador@gmail.com',
             'phone' => '777777777',
-            'role' => 'Admin',
+            'role' => 'admin',
             'password' => $hashedPassword,
         ]);
-
         
-        $user->assignRole('Admin');
+        $user->assignRole('admin');
 
-        
-        User::factory(177)->create();
+        User::factory(7)->doctor()->create();
+        User::factory(50)->paciente()->create();
+        User::factory(4)->receptionist()->create();
     }
 }

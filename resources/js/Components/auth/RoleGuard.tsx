@@ -2,18 +2,21 @@ import React from 'react';
 import { usePage } from '@inertiajs/react';
 import { PageProps } from '@/types';
 
-
-interface RoleGuardProps {
-    allowedRoles: string[];
+interface GuardProps {
+    allowedRoles?: string[];
+    allowedPermissions?: string[];
     children: React.ReactNode;
 }
 
-const RoleGuard: React.FC<RoleGuardProps> = ({ allowedRoles, children }) => {
+const Guard: React.FC<GuardProps> = ({ allowedRoles = [], allowedPermissions = [], children }) => {
     const { auth } = usePage<PageProps>().props;
     const userRoles = auth.roles || [];
-    const hasAccess = allowedRoles.some((role) => userRoles.includes(role));
+    const userPermissions = auth.permissions || [];
 
-    return hasAccess ? <>{children}</> : null;
+    const hasRoleAccess = allowedRoles.length === 0 || allowedRoles.some((role) => userRoles.includes(role));
+    const hasPermissionAccess = allowedPermissions.length === 0 || allowedPermissions.some((perm) => userPermissions.includes(perm));
+
+    return hasRoleAccess && hasPermissionAccess ? <>{children}</> : null;
 };
 
-export default RoleGuard;
+export default Guard;

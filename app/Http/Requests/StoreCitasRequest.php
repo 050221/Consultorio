@@ -28,8 +28,10 @@ class StoreCitasRequest extends FormRequest
     {
         return [
             'patient_id' => 'required|exists:users,id',
+            'doctor_id' => 'required|exists:users,id',
             'fecha' => 'required|date', // Usa date en lugar de string
             'hora' => 'required|date_format:H:i', // Valida el formato de hora
+            'tipo' => 'required|string',
             'status' => 'required|string',
             'nota' => 'nullable'
         ];
@@ -39,11 +41,13 @@ class StoreCitasRequest extends FormRequest
     {
         return [
             'patient_id.required' => 'El paciente es obligatorio',
+            'doctor_id.required' => 'El médico es obligatorio',
             'fecha.required' => 'La fecha es obligatoria.',
             'hora.required' => 'La hora es obligatoria.',
-            'status.required' => 'El estado es obligatorio.',
+            'tipo.required' => 'El tipo de cita es obligatorio.',
             'fecha.date' => 'La fecha debe ser válida.',
             'hora.date_format' => 'La hora debe tener un formato válido (HH:mm).',
+            'status.required' => 'El estado es obligatorio.',
         ];
     }
 }

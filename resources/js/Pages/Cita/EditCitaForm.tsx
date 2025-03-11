@@ -7,17 +7,18 @@ import ReusableButton from '@/Components/Form/ReusableButton';
 import Swal from 'sweetalert2';
 import ReusableTextArea from '@/Components/ReusableTextArea';
 import { EditCitaFormProps } from '@/types';
+import ReusableSelect from '@/Components/Table/ReusableSelect';
 
 const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
-
-    const userName = cita.users?.name || 'Desconocido';
 
     // useForm para manejar el estado del formulario
     const { data, setData, put, errors, processing } = useForm({
         patient_id: cita.patient_id,
+        doctor_id: cita.doctor_id,
         fecha: cita.fecha,
         hora: cita.hora,
         status: cita.status,
+        tipo: cita.tipo,
         nota: cita.nota || '',
     });
 
@@ -48,39 +49,44 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
 
     return (
         <>
-            <Head title="Editar cita" />
+            <Head title="Edición de Cita" />
 
             <form onSubmit={handleSubmit}>
                 {/* Datos principales */}
                 <div className="my-4">
-                    <h3 className="text-lg font-medium text-gray-700 mb-4">Datos Principales</h3>
-                    <div className="flex flex-wrap -mx-2">
-                        <div className="w-full sm:w-1/2 px-2 mb-4 sm:mb-0">
+                    <h3 className="text-gray-800 font-semibold text-xl">Datos Principales</h3>
+                    <div className="flex flex-wrap  mt-1">
+                        <div className="w-full sm:w-1/2 mt-2">
                             <InputLabel htmlFor="patient_id" value="Nombre del paciente:" />
-                            <p className="mt-1 text-gray-700 font-medium">{userName}</p>
+                            <p className="text-gray-900 text-lg font-medium">{cita.patient.name}</p>
                         </div>
+                        <div className="w-full sm:w-1/2 mt-2">
+                            <InputLabel htmlFor="patient_id" value="Nombre del dentista:" />
+                            <p className="text-gray-900 text-lg font-medium">{cita.doctor.name}</p>
+                        </div>
+                    </div>
+                </div>
 
-                        <div className="w-full sm:w-1/2 px-2">
+
+                {/* Detalles de la cita */}
+                <div className="my-4">
+                    <h3 className="text-xl font-semibold text-gray-800 ">Detalles de la Cita</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <div>
                             <InputLabel htmlFor="fecha" value="Fecha de la cita:" />
                             <TextInput
                                 id="fecha"
                                 type="date"
                                 value={data.fecha}
                                 onChange={(e) => setData('fecha', e.target.value)}
+                                min={new Date().toISOString().split("T")[0]}
                                 required
-                                min={new Date().toISOString().split('T')[0]}
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                className="w-full"
                             />
                             <InputError message={errors.fecha} className="mt-2 text-red-500" />
                         </div>
-                    </div>
-                </div>
 
-                {/* Detalles de la cita */}
-                <div className="my-4">
-                    <h3 className="text-lg font-medium text-gray-700 mb-4">Detalles de la Cita</h3>
-                    <div className="flex flex-wrap -mx-2">
-                        <div className="w-full sm:w-1/2 px-2 mb-4 sm:mb-0">
+                        <div>
                             <InputLabel htmlFor="hora" value="Elige una hora:" />
                             <TextInput
                                 id="hora"
@@ -88,30 +94,51 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
                                 value={data.hora}
                                 onChange={(e) => setData('hora', e.target.value)}
                                 required
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                className="w-full"
                             />
                             <InputError message={errors.hora} className="mt-2 text-red-500" />
                         </div>
 
-                        <div className="w-full sm:w-1/2 px-2">
+                        <div>
+                            <InputLabel htmlFor="tipo" value="Servicio:" />
+                            <ReusableSelect
+                                id="tipo"
+                                name="tipo"
+                                value={data.tipo}
+                                onChange={(e) => setData('tipo', e.target.value)}
+                                required
+                                options={[
+                                    { value: 'Ortodoncia', label: 'Ortodoncia' },
+                                    { value: 'Periodoncia', label: 'Periodoncia' },
+                                    { value: 'Endodoncia', label: 'Endodoncia' },
+                                    { value: 'Prostodoncia', label: 'Prostodoncia' },
+                                    { value: 'Cirugía Oral y Maxilofacial', label: 'Cirugía Oral y Maxilofacial' },
+                                    { value: 'Pedodoncia', label: 'Pedodoncia' },
+                                ]}
+                            />
+                            <InputError message={errors.tipo} className="mt-2 text-red-500" />
+                        </div>
+
+                        <div>
                             <InputLabel htmlFor="status" value="Elige el estado de la cita:" />
-                            <select
+                            <ReusableSelect
                                 id="status"
+                                name="status"
                                 value={data.status}
                                 onChange={(e) => setData('status', e.target.value)}
                                 required
-                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            >
-                                <option value="" disabled>
-                                    Selecciona el estado
-                                </option>
-                                <option value="Pendiente">Pendiente</option>
-                                <option value="Confirmada">Confirmada</option>
-                                <option value="Cancelada">Cancelada</option>
-                            </select>
+                                options={[
+                                    { value: 'Pendiente', label: 'Pendiente' },
+                                    { value: 'Cancelada', label: 'Cancelada' },
+                                    { value: 'Confirmada', label: 'Confirmada' },
+
+                                ]}
+                            />
                             <InputError message={errors.status} className="mt-2 text-red-500" />
                         </div>
                     </div>
+
+
                 </div>
 
                 {/* Descripción de la cita */}
@@ -123,7 +150,6 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
                         onChange={(e) => setData('nota', e.target.value)}
                         placeholder="Registre detalles importantes de la consulta..."
                         maxLength={700}
-                        className="font-mono text-base leading-relaxed tracking-wide"
                     />
                     <div className="text-right text-sm text-gray-500">
                         {data.nota?.length || 0} / 700 caracteres

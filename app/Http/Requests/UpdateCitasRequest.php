@@ -23,9 +23,11 @@ class UpdateCitasRequest extends FormRequest
     {
         return [
             'patient_id' => 'required|exists:users,id',
+            'doctor_id' => 'required|exists:users,id',
             'fecha' => 'required|date', 
             'hora' => 'required',
             'status' => 'required|string',
+            'tipo' => 'required|string',
             'nota' => 'nullable'
         ];
     }
@@ -34,10 +36,12 @@ class UpdateCitasRequest extends FormRequest
     {
         return [
             'patient_id.required' => 'El paciente es obligatorio',
+            'doctor_id.required' => 'El médico es obligatorio',
             'fecha.required' => 'La fecha es obligatoria.',
             'hora.required' => 'La hora es obligatoria.',
-            'status.required' => 'El estado es obligatorio.',
             'fecha.date' => 'La fecha debe ser válida.',
+            'status.required' => 'El estado es obligatorio.',
+            'tipo.required' => 'El tipo de cita es obligatorio.',
         ];
     }
 }

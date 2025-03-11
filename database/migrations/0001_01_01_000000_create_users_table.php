@@ -15,11 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->unique();
+            $table->string('phone')->nullable()->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->default('Patient');
             $table->boolean('activo')->default(true); 
+            $table->date('birthdate')->nullable()->index();
+            // Campos para roles específicos
+            $table->string('specialty', 50)->nullable(); // Para doctores
+            $table->json('availability')->nullable(); // Horarios laborales en JSON
+          
             $table->rememberToken();
             $table->timestamps();
         });
