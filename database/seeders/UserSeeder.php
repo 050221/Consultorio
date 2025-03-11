@@ -19,15 +19,19 @@ class UserSeeder extends Seeder
         $user = User::create([
             'name' => 'administrador',
             'email' => 'administrador@gmail.com',
-            'phone' => '777777777',
+            'phone' => '777-789-5894',
             'role' => 'admin',
             'password' => $hashedPassword,
         ]);
         
         $user->assignRole('admin');
 
+        /*
+
         User::factory(7)->doctor()->create();
         User::factory(50)->paciente()->create();
         User::factory(4)->receptionist()->create();
+
+        */
     }
 }
