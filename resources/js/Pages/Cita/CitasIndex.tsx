@@ -156,6 +156,7 @@ const CitasIndex = () => {
                                         {citas.data.length === 0 ? (
                                             <div className="text-center py-4 text-gray-500">
                                                 No hay citas registradas actualmente.
+                                                <hr className='h-2 w-full' />
                                             </div>
                                         ) : (
 

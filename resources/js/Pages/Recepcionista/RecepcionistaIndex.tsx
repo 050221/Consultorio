@@ -135,7 +135,7 @@ const RecepcionistaIndex = () => {
                                 <>
                                     {recepcionistas.data.length === 0 ? (
                                         <div className="text-center py-4 text-gray-500">
-                                            No se encontraron recepcionistas que coincidan con la búsqueda.
+                                            No hay recepcionistas registradas actualmente.
                                             <hr className='h-2 w-full' />
                                         </div>
                                     ) : (

@@ -15,10 +15,10 @@ const Graficas: React.FC<GraficasProps> = ({ destistasMasCitas, totalCitasPorMes
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
                         <TrendingUp className="w-7 h-7 text-blue-500" />
-                        Estadísticas de Citas
+                        <span className="text-gray-600  dark:text-gray-50">Estadísticas de Citas</span>
 
                     </h2>
-                    <p className="text-gray-600 text-sm mt-1">Análisis de la cantidad de citas registradas en los últimos meses.</p>
+                    <p className="text-gray-600 text-sm dark:text-gray-100 mt-1">Análisis de la cantidad de citas registradas en los últimos meses.</p>
                 </div>
 
                 {/* Contenedor de Gráfico */}
@@ -70,9 +70,9 @@ const Graficas: React.FC<GraficasProps> = ({ destistasMasCitas, totalCitasPorMes
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
                         <UserCheck className="w-7 h-7 text-indigo-500" />
-                        Dentistas con Más Citas
+                        <span className="text-gray-600  dark:text-gray-50"> Dentistas con Más Citas</span>
                     </h2>
-                    <p className="text-gray-600 text-sm mt-1">Análisis de los dentistas más demandados en la clínica.</p>
+                    <p className="text-gray-600 dark:text-gray-100 text-sm mt-1">Análisis de los dentistas más demandados en la clínica.</p>
                 </div>
 
                 {/* Contenedor del Gráfico */}
@@ -81,7 +81,7 @@ const Graficas: React.FC<GraficasProps> = ({ destistasMasCitas, totalCitasPorMes
                     <div className="flex items-center gap-3 mb-4">
                         <BarChart2 className="w-6 h-6 text-indigo-600" />
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-700">Dentistas con Mayor Demanda 👨‍⚕️</h3>
+                            <h3 className="text-lg font-semibold text-gray-700  ">Dentistas con Mayor Demanda 👨‍⚕️</h3>
                             <p className="text-xs text-gray-500">Identifica qué dentistas tienen más pacientes y citas asignadas.</p>
                         </div>
                     </div>

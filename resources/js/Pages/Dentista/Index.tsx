@@ -92,7 +92,7 @@ const DoctorIndex = () => {
 
                                 <div className="w-full sm:w-1/2 my-2 md:my-0">
                                     <SearchBar
-                                        placeHolder="Buscar paciente..."
+                                        placeHolder="Buscar dentista..."
                                         value={filters.search}
                                         onChange={(e) => handleFilterChange("search", e.target.value)}
                                     />
@@ -129,7 +129,7 @@ const DoctorIndex = () => {
                                 <>
                                     {dentistas.data.length === 0 ? (
                                         <div className="text-center py-4 text-gray-500">
-                                            No se encontraron dentistas que coincidan con la búsqueda.
+                                            No hay dentistas registrados actualmente.
                                             <hr className='h-2 w-full' />
                                         </div>
                                     ) : (
