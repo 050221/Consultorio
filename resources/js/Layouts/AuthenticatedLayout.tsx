@@ -1,4 +1,3 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
@@ -191,7 +190,37 @@ export default function Authenticated({
                             href={route('dashboard')}
                             active={route().current('dashboard')}
                         >
-                            Dashboard
+                            Inicio
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('pacientes')}
+                            active={route().current('pacientes')}
+                        >
+                            Pacientes
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('citas')}
+                            active={route().current('citas')}
+                        >
+                            Citas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('dentistas')}
+                            active={route().current('dentistas')}
+                        >
+                            Dentistas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('recepcionistas')}
+                            active={route().current('recepcionistas')}
+                        >
+                            Recepcionistas
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('historial')}
+                            active={route().current('historial')}
+                        >
+                            Historial de Citas
                         </ResponsiveNavLink>
                     </div>
 
@@ -207,14 +236,14 @@ export default function Authenticated({
 
                         <div className="mt-3 space-y-1">
                             <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
+                                Perfil
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
                                 href={route('logout')}
                                 as="button"
                             >
-                                Log Out
+                                Cerrar sesión
                             </ResponsiveNavLink>
                         </div>
                     </div>
