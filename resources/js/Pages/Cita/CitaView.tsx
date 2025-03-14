@@ -31,7 +31,7 @@ const CitaView: React.FC = () => {
       <div className="py-12 px-4 sm:px-0">
         <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden ">
           {/* Encabezado */}
-          <div className="bg-gradient-to-r from-sky-500 to-blue-700 dark:from-gray-800 dark:to-gray-900 text-white p-5 ">
+          <div className="bg-gradient-to-r from-sky-500 to-blue-700 dark:from-sky-600 dark:to-blue-800 text-white p-5 ">
 
             <h1 className="text-2xl font-semibold">Detalles de la Cita</h1>
           </div>

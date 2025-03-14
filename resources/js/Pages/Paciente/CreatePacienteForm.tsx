@@ -61,7 +61,7 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
             <Head title="Nuevo Paciente" />
             <form onSubmit={submit} className="space-y-4">
                 <div>
-                    <InputLabel htmlFor="name" value="Nombre" />
+                    <InputLabel htmlFor="name" value="Nombre completo" />
                     <TextInput
                         id="name"
                         type="text"

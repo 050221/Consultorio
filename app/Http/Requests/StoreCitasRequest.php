@@ -40,8 +40,10 @@ class StoreCitasRequest extends FormRequest
     public function messages()
     {
         return [
-            'patient_id.required' => 'El paciente es obligatorio',
-            'doctor_id.required' => 'El médico es obligatorio',
+            'patient_id.required' => 'El nombre del paciente es obligatorio',
+            'patient_id.exists' => 'El nombre del paciente no es válido',
+            'doctor_id.required' => 'El nombre del médico es obligatorio',
+            'doctor_id.exists' => 'El nombre del médico no es válido',
             'fecha.required' => 'La fecha es obligatoria.',
             'hora.required' => 'La hora es obligatoria.',
             'tipo.required' => 'El tipo de cita es obligatorio.',

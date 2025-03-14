@@ -41,7 +41,7 @@ const CitasCalendar:React.FC<CalendarProps> = ({
     return (
       <Popover>
         <PopoverTrigger asChild>
-          <div className="cursor-pointer text-sm text-gray-800 dark:text-neutral-100 bg-sky-200  rounded border-sky-600 w-full h-full">
+          <div className="cursor-pointer text-sm text-gray-800 dark:text-neutral-100 dark:bg-sky-400  rounded border-sky-600 w-full h-full">
             {eventInfo.event.title}
           </div>
         </PopoverTrigger>

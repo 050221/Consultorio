@@ -42,6 +42,10 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
                     text: 'Por favor, revisa los datos ingresados y vuelve a intentarlo.',
                     icon: 'error',
                     confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'bg-sky-500 text-white font-semibold py-2 px-6 rounded hover:bg-sky-600 focus:ring-2 focus:ring-sky-300 transition-all duration-200 ease-in-out cursor-pointer border-2 border-sky-300 shadow-md hover:shadow-lg active:scale-95 mr-2',
+                    },
+                    buttonsStyling: false,
                 });
             },
         });
@@ -73,7 +77,7 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
                     <h3 className="text-xl font-semibold text-gray-800 ">Detalles de la Cita</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                         <div>
-                            <InputLabel htmlFor="fecha" value="Fecha de la cita:" />
+                            <InputLabel htmlFor="fecha" value="Fecha de la cita" />
                             <TextInput
                                 id="fecha"
                                 type="date"
@@ -87,7 +91,7 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
                         </div>
 
                         <div>
-                            <InputLabel htmlFor="hora" value="Elige una hora:" />
+                            <InputLabel htmlFor="hora" value="Elige una hora" />
                             <TextInput
                                 id="hora"
                                 type="time"
@@ -100,7 +104,7 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
                         </div>
 
                         <div>
-                            <InputLabel htmlFor="tipo" value="Servicio:" />
+                            <InputLabel htmlFor="tipo" value="Servicio" />
                             <ReusableSelect
                                 id="tipo"
                                 name="tipo"
@@ -120,7 +124,7 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
                         </div>
 
                         <div>
-                            <InputLabel htmlFor="status" value="Elige el estado de la cita:" />
+                            <InputLabel htmlFor="status" value="Elige el estado de la cita" />
                             <ReusableSelect
                                 id="status"
                                 name="status"
@@ -143,7 +147,7 @@ const EditCitaForm: React.FC<EditCitaFormProps> = ({ cita, onClose }) => {
 
                 {/* Descripción de la cita */}
                 <div className="my-4">
-                    <InputLabel htmlFor="nota" value="Notas de la consulta:" />
+                    <InputLabel htmlFor="nota" value="Notas de la consulta" />
                     <ReusableTextArea
                         id="nota"
                         value={data.nota}

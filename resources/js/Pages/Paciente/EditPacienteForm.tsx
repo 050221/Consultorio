@@ -63,7 +63,7 @@ const EditPacienteForm: React.FC<PacienteFormProps> = ({ paciente, onClose }) =>
             <form onSubmit={handleSubmit} >
                 <div className="grid gap-4 mt-6 ">
                     <div>
-                        <InputLabel htmlFor="name" value="Nombre" />
+                        <InputLabel htmlFor="name" value="Nombre completo" />
                         <TextInput
                             id="name"
                             type="text"

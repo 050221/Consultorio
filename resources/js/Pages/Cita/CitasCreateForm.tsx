@@ -47,12 +47,15 @@ const CitasCreate = () => {
                 });
             },
             onError: () => {
-                console.log('Error al guardar la cita:', errors);
                 Swal.fire({
                     title: 'Error al Agendar',
                     text: 'Ocurrió un problema al intentar agendar la cita. Por favor, verifica los datos e inténtalo nuevamente.',
                     icon: 'error',
                     confirmButtonText: 'Entendido',
+                    customClass: {
+                        confirmButton: 'bg-sky-500 text-white font-semibold py-2 px-6 rounded hover:bg-sky-600 focus:ring-2 focus:ring-sky-300 transition-all duration-200 ease-in-out cursor-pointer border-2 border-sky-300 shadow-md hover:shadow-lg active:scale-95 mr-2',
+                    },
+                    buttonsStyling: false,
                 });
             },
         });
@@ -140,7 +143,7 @@ const CitasCreate = () => {
                                         </div>
 
                                         <div className='w-full my-3'>
-                                            <InputLabel htmlFor="fecha" value="Fecha de la cita:" />
+                                            <InputLabel htmlFor="fecha" value="Fecha de la cita" />
                                             <TextInput
                                                 id="fecha"
                                                 type="date"
@@ -155,7 +158,7 @@ const CitasCreate = () => {
                                         </div>
 
                                         <div className='w-full my-3'>
-                                            <InputLabel htmlFor="hora" value="Elige una hora:" />
+                                            <InputLabel htmlFor="hora" value="Elige una hora" />
                                             <TextInput
                                                 id="hora"
                                                 type="time"
@@ -169,7 +172,7 @@ const CitasCreate = () => {
                                         </div>
 
                                         <div className='w-full my-3'>
-                                            <InputLabel htmlFor="status" value="Elige el estado:" />
+                                            <InputLabel htmlFor="status" value="Elige el estado" />
                                             <ReusableSelect
                                                 id="status"
                                                 name="status"
