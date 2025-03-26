@@ -98,6 +98,13 @@ export default function CreatePacienteForm({ onClose }: { onClose: () => void })
                         className="mt-1 block w-full"
                         onChange={(e) => setData('birthdate', e.target.value)}
                         required
+                        min={new Date(new Date().setFullYear(new Date().getFullYear() - 90))
+                            .toISOString()
+                            .split("T")[0]}
+                        max={new Date(new Date().setFullYear(new Date().getFullYear() - 1))
+                            .toISOString()
+                            .split("T")[0]}
+
                     />
                     <InputError message={errors.birthdate} className="mt-2" />
                 </div>

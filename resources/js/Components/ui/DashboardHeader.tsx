@@ -9,7 +9,7 @@ const DashboardHeader:React.FC<DashboardHeaderProps> = ({ icon, title, subtitle 
         <div className="space-y-1">
             <div className="flex items-center space-x-2">
                 {icon}
-                <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+                <h2 className=" font-bold text-gray-800 text-2xl">{title}</h2>
             </div>
             <p className="text-sm text-gray-500">{subtitle}</p>
         </div>

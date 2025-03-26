@@ -32,7 +32,7 @@ export default function Dashboard() {
                         <DashboardHeader
                             icon={<LayoutDashboard className="w-6 h-6 text-sky-600" />}
                             title="Panel de Control"
-                            subtitle="Resumen de citas, pacientes, dentistas y estadísticas del sistema"
+                            subtitle="Resumen de citas, pacientes, dentistas, repecionistas y estadísticas del sistema"
                         />
                     </RoleGuard>
                     <RoleGuard allowedRoles={['doctor']}>
@@ -55,7 +55,7 @@ export default function Dashboard() {
                         <DashboardHeader
                             icon={<User className="w-6 h-6 text-sky-600" />}
                             title={`Bienvenido, ${auth.user.name}`}
-                            subtitle="Consulta tu historial de citas y agenda nuevas"
+                            subtitle="Consulta tus citas y accede a tu historial completo"
                         />
                     </RoleGuard>
 
@@ -213,14 +213,15 @@ export default function Dashboard() {
                 <div className="py-12">
                     <div className="max-w-4xl mx-auto space-y-6">
                         <div className="bg-gradient-to-r from-sky-500 to-blue-600 shadow-lg rounded-xl p-6 mx-2 md:mx-0">
-                            <h3 className="text-2xl font-bold text-white mb-6">📅 Tus Citas</h3>
+                            <h3 className="text-2xl font-bold text-white mb-6">📅 Cita</h3>
 
                             {citasUser.length > 0 ? (
                                 <div className="space-y-4">
                                     {citasUser.map((cita: Cita) => (
-                                        <div key={cita.id} className="bg-white p-5 rounded-lg shadow-md flex items-center justify-between border-l-4 border-sky-500">
+                                        <div key={cita.id} className="bg-white p-5 rounded-lg shadow-md grid grid-cols-1 sm:grid-cols-2  gap-4 border-l-4 border-sky-500">
                                             <div className="space-y-2">
-                                                <h4 className="text-lg font-semibold text-sky-600">{cita.tipo}</h4>
+
+                                                <h4 className="text-lg font-semibold text-sky-600">Servicio de  {cita.tipo}</h4>
                                                 <p className="text-sm text-gray-700 flex items-center gap-2">
                                                     <CalendarDays className="w-5 h-5 text-gray-500" />
                                                     {formatDateComplete(cita.fecha)}
@@ -230,28 +231,31 @@ export default function Dashboard() {
                                                     {formatHora(cita.hora)}
                                                 </p>
                                                 <p className="text-sm text-gray-700 flex items-center gap-2">
-                                                    <Phone className="w-5 h-5 text-gray-500" />
-                                                    {cita.patient?.phone || "Sin teléfono"}
+                                                    <Stethoscope className="w-5 h-5 text-gray-500" />
+                                                    {cita.doctor?.name || "Sin dentista asignado"}
                                                 </p>
-                                                <p className="text-sm text-gray-700 flex items-center gap-2">
-                                                    <Mail className="w-5 h-5 text-gray-500" />
-                                                    {cita.patient?.email || "Sin correo"}
+                                                <p className={`px-3 py-1 text-sm font-medium rounded-full ${getEventStyle(cita.status)}`}>
+                                                    {cita.status}
                                                 </p>
                                             </div>
 
-                                            <div className="text-center">
-                                                <span className={`px-3 py-1 text-sm font-medium rounded-full ${getEventStyle(cita.status)}`}>
-                                                    {cita.status}
-                                                </span>
-                                                <p className="mt-2 text-sm text-gray-500 italic">
-                                                    {cita.nota ? cita.nota : "Sin nota"}
+                                            <div className="text-justify">
+                                                <p className="mt-6 text-sm text-gray-500 italic max-w-96">
+                                                    <span className='block text-left mb-1 text-base text-gray-700 font-semibold'>
+                                                        Nota de Observación:
+                                                    </span>
+
+                                                    {/* Mostrar un mensaje más amigable si no hay nota */}
+                                                    <span className={`block text-left mb-1 text-base ${cita.nota ? 'text-gray-700' : 'text-gray-400'}`}>
+                                                        {cita.nota ? cita.nota : <span className="italic text-gray-400">Sin nota</span>}
+                                                    </span>
                                                 </p>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-white text-center italic">No tienes citas programadas.</p>
+                                <p className="text-white text-center italic">No tienes cita programadas.</p>
                             )}
                         </div>
                     </div>

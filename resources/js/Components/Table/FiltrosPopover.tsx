@@ -63,7 +63,7 @@ const FiltrosPopover: React.FC<FiltrosPopoverProps> = ({ date, status, handleDat
                     </div>
                     <div className="flex justify-end space-x-2">
                         <ReusableButton onClick={clearFilters} className="bg-gray-300 text-gray-700">
-                            Limpiar Filtros
+                            Limpiar Fecha
                         </ReusableButton>
                         <ReusableButton onClick={() => setOpen(false)}>
                             Cerrar

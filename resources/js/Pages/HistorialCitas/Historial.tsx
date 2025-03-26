@@ -49,7 +49,7 @@ const Historial = () => {
                             </div>
                             <div className="w-full sm:w-1/2 my-2 md:my-0">
                                 <div className='ml-auto w-full flex  justify-end gap-4'>
-                                    <RoleGuard allowedRoles={['Admin', 'Doctor']}>
+                                    <RoleGuard allowedRoles={['Admin', 'Doctor','receptionist']}>
                                         <div className='mt-1'>
                                             <FiltrosPopover
                                                 date={date}
@@ -289,7 +289,7 @@ const Historial = () => {
                                                 </p>
                                                 <p className="mt-2 text-sm text-gray-600 flex items-center gap-2">
                                                     <FileText className="w-5 h-5 text-gray-500" />
-                                                    {cita.nota ? cita.nota : <span className="italic text-gray-500">Sin nota</span>}
+                                                    {cita.nota? cita.nota : <span className="italic text-gray-500">Sin nota</span>}
                                                 </p>
                                             </div>
                                         </div>

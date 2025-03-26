@@ -23,7 +23,7 @@ export default function Authenticated({
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href="/">
-                                    <img src="/images/img.png" alt="Logo"/> 
+                                    <img src="/images/img.png" alt="Logo" />
                                 </Link>
                             </div>
 
@@ -57,7 +57,7 @@ export default function Authenticated({
                                         <span>Citas</span>
                                     </NavLink>
                                 </RoleGuard>
-                                <RoleGuard allowedRoles={['admin', 'receptionist',]}>
+                                <RoleGuard allowedRoles={['admin']}>
                                     <NavLink
                                         href={route('dentistas')}
                                         active={route().current('dentistas')}
@@ -77,7 +77,7 @@ export default function Authenticated({
                                         <span>Recepcionistas</span>
                                     </NavLink>
                                 </RoleGuard>
-                                <RoleGuard allowedRoles={['admin', 'doctor', 'patient']}>
+                                <RoleGuard allowedRoles={['admin', 'doctor', 'patient', 'receptionist']}>
                                     <NavLink
                                         href={route('historial')}
                                         active={route().current('historial')}
@@ -191,36 +191,46 @@ export default function Authenticated({
                         >
                             Inicio
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('pacientes')}
-                            active={route().current('pacientes')}
-                        >
-                            Pacientes
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('citas')}
-                            active={route().current('citas')}
-                        >
-                            Citas
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('dentistas')}
-                            active={route().current('dentistas')}
-                        >
-                            Dentistas
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('recepcionistas')}
-                            active={route().current('recepcionistas')}
-                        >
-                            Recepcionistas
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('historial')}
-                            active={route().current('historial')}
-                        >
-                            Historial de Citas
-                        </ResponsiveNavLink>
+                        <RoleGuard allowedRoles={['admin', 'receptionist']}>
+                            <ResponsiveNavLink
+                                href={route('pacientes')}
+                                active={route().current('pacientes')}
+                            >
+                                Pacientes
+                            </ResponsiveNavLink>
+                        </RoleGuard>
+                        <RoleGuard allowedRoles={['admin', 'receptionist', 'doctor']}>
+                            <ResponsiveNavLink
+                                href={route('citas')}
+                                active={route().current('citas')}
+                            >
+                                Citas
+                            </ResponsiveNavLink>
+                        </RoleGuard>
+                        <RoleGuard allowedRoles={['admin']}>
+                            <ResponsiveNavLink
+                                href={route('dentistas')}
+                                active={route().current('dentistas')}
+                            >
+                                Dentistas
+                            </ResponsiveNavLink>
+                        </RoleGuard>
+                        <RoleGuard allowedRoles={['admin', 'doctor']}>
+                            <ResponsiveNavLink
+                                href={route('recepcionistas')}
+                                active={route().current('recepcionistas')}
+                            >
+                                Recepcionistas
+                            </ResponsiveNavLink>
+                        </RoleGuard>
+                        <RoleGuard allowedRoles={['admin', 'receptionist', 'doctor']}>
+                            <ResponsiveNavLink
+                                href={route('historial')}
+                                active={route().current('historial')}
+                            >
+                                Historial de Citas
+                            </ResponsiveNavLink>
+                        </RoleGuard>
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">

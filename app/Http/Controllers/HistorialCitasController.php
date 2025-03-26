@@ -73,7 +73,7 @@ class HistorialCitasController extends Controller
             'doctor:id,name,specialty'
         ])
             ->where('patient_id', $user->id)
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo','nota')
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')
             ->paginate($perPage);

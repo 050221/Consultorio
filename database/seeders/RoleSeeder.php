@@ -47,7 +47,8 @@ class RoleSeeder extends Seeder
             'gestionar_citas',
             'ver_citas',
             'editar_citas',
-            'cancelar_citas'
+            'cancelar_citas',
+            'ver_expedientes',
         ]);
         $doctor->syncPermissions([
             'ver_dashboard',
