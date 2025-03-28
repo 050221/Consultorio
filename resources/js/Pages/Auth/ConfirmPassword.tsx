@@ -24,8 +24,7 @@ export default function ConfirmPassword() {
             <Head title="Confirmar Contraseña" />
 
             <div className="mb-4 text-sm text-gray-600">
-                This is a secure area of the application. Please confirm your
-                password before continuing.
+            Esta es una área segura de la aplicación. Por favor, confirme su contraseña antes de continuar.
             </div>
 
             <form onSubmit={submit}>

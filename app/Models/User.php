@@ -7,18 +7,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\ResetPasswordNotification;
 
 /**
-     * @method \Illuminate\Support\Collection getRoleNames()
-     * @method \Illuminate\Database\Eloquent\Collection getAllPermissions()
-     */
+ * @method \Illuminate\Support\Collection getRoleNames()
+ * @method \Illuminate\Database\Eloquent\Collection getAllPermissions()
+ */
 
 class User extends Authenticatable
 {
 
     use Notifiable;
     use HasRoles;
-    
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -49,7 +50,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-   /**
+    /**
      * Relación con citas en las que el usuario es paciente.
      */
     public function citasComoPaciente()
@@ -84,5 +85,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
