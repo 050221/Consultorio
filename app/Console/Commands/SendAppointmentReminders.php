@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Citas;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use App\Notifications\AppointmentReminder;
 
 class SendAppointmentReminders extends Command
 {
@@ -20,7 +21,7 @@ class SendAppointmentReminders extends Command
      *
      * @var string
      */
-    protected $description = 'Enviar recordatorios de cita a los pacientes';
+    protected $description = 'Envía recordatorios de citas a los pacientes con citas próximas';
 
     public function __construct()
     {
@@ -38,10 +39,19 @@ class SendAppointmentReminders extends Command
         $appointments = Citas::where('fecha', $tomorrow)->get();
 
         foreach ($appointments as $appointment) {
-            $patient = $appointment->users; // Asegúrate de tener una relación `user` en el modelo Appointment
-            $patient->notify(new \App\Notifications\AppointmentReminder($appointment));
+            // Obtener el paciente correctamente
+            $patient = $appointment->patient; // Usamos `patient` en vez de `users`
+
+            // Verificar que el paciente exista antes de enviar la notificación
+            if (!$patient) {
+                $this->warn("Cita ID {$appointment->id} no tiene paciente asignado.");
+                continue;
+            }
+
+            // Enviar la notificación
+            $patient->notify(new AppointmentReminder($appointment));
         }
 
-        $this->info('Recordatorios enviados con éxito.');
+        $this->info('Recordatorios enviados con éxito a las ' . Carbon::now()->format('H:i:s'));
     }
 }

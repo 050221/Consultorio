@@ -49,8 +49,8 @@ class AppointmentReminder extends Notification
             ->line('Por favor, llega 10 minutos antes de tu cita para evitar inconvenientes.')
             ->action('Gestionar mi cita', url('/cita/' . $this->appointment->id))
             ->line('Gracias por confiar en nuestra clínica dental.')
-            ->line('🦷 ¡Tu salud dental es nuestra prioridad!')
-            ->salutation('Saludos cordiales, Equipo de [Nombre de la Clínica]');
+            ->line('🦷 ¡Tu salud dental es nuestra prioridad!');
+            //->salutation('Saludos cordiales, Equipo de [Nombre de la Clínica]');
     }
 
     /**
