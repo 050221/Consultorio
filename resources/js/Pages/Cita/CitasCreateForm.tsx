@@ -152,7 +152,7 @@ const CitasCreate = () => {
                                                 className="mt-1 block w-full"
                                                 onChange={(e) => setData('fecha', e.target.value)}
                                                 required
-                                                min={new Date().toISOString().split("T")[0]}
+                                                min={new Date().toLocaleDateString('en-CA')}
                                             />
                                             <InputError message={errors.fecha} className="mt-2" />
                                         </div>
