@@ -1,11 +1,12 @@
 import Checkbox from '@/Components/Checkbox';
+import ButtonVisibility from '@/Components/Form/ButtonVisibility';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 export default function Login({
     status,
@@ -19,7 +20,8 @@ export default function Login({
         password: '',
         remember: false,
     });
-   // const { translations } = usePage().props;
+    // const { translations } = usePage().props;
+    const [showPassword, setShowPassword] = useState(false);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -58,19 +60,22 @@ export default function Login({
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 relative">
                     <InputLabel htmlFor="password" value="Contraseña" />
 
                     <TextInput
                         id="password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
-
+                    <ButtonVisibility
+                        onToggle={() => setShowPassword((prev) => !prev)}
+                        isPasswordVisible={showPassword}
+                    />
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
@@ -84,7 +89,7 @@ export default function Login({
                             }
                         />
                         <span className="ms-2 text-sm text-gray-600">
-                        Mantener sesión activa
+                            Mantener sesión activa
                         </span>
                     </label>
                 </div>
@@ -100,7 +105,7 @@ export default function Login({
                     )}
 
                     <PrimaryButton className="ms-4" disabled={processing}>
-                    Iniciar sesión
+                        Iniciar sesión
                     </PrimaryButton>
                 </div>
             </form>

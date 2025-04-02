@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Citas;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
-use Illuminate\Support\Facades\Log;
 
 
 
@@ -31,9 +28,10 @@ class StoreCitasRequest extends FormRequest
             'doctor_id' => 'required|exists:users,id',
             'fecha' => 'required|date', // Usa date en lugar de string
             'hora' => 'required|date_format:H:i', // Valida el formato de hora
-            'tipo' => 'required|string',
+            'servicio' => 'required|array',
             'status' => 'required|string',
-            'nota' => 'nullable'
+            'nota' => 'nullable',
+            'is_emergency' => 'nullable|boolean',
         ];
     }
 
@@ -46,10 +44,13 @@ class StoreCitasRequest extends FormRequest
             'doctor_id.exists' => 'El nombre del médico no es válido',
             'fecha.required' => 'La fecha es obligatoria.',
             'hora.required' => 'La hora es obligatoria.',
-            'tipo.required' => 'El tipo de cita es obligatorio.',
+            'servicio.required' => 'El servicio de cita es obligatorio.',
+            'servicio.array' => 'El servicio de cita debe ser un arreglo.',
             'fecha.date' => 'La fecha debe ser válida.',
             'hora.date_format' => 'La hora debe tener un formato válido (HH:mm).',
             'status.required' => 'El estado es obligatorio.',
+            'status.string' => 'El estado debe ser una cadena de texto.',
+            'is_emergency.boolean' => 'El campo de urgencia debe ser verdadero o falso.',
         ];
     }
 }

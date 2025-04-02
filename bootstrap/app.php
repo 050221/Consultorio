@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        
         // Manejo de error 404
         $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
             return \Inertia\Inertia::render('Errors/Error404')->toResponse($request)->setStatusCode(404);
@@ -38,10 +39,10 @@ return Application::configure(basePath: dirname(__DIR__))
             return \Inertia\Inertia::render('Errors/Error403')->toResponse($request)->setStatusCode(403);
         });
 
-        // Error 500 (Error interno del servidor)
+        /* Error 500 (Error interno del servidor)
         $exceptions->render(function (\Throwable $e, $request) {
             return \Inertia\Inertia::render('Errors/Error500')->toResponse($request)->setStatusCode(500);
-        });
+        });*/
 
         // Error 401 (No autenticado)
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {

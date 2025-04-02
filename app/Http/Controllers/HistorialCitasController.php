@@ -56,7 +56,7 @@ class HistorialCitasController extends Controller
                 $query->whereHas('patient', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
                 })
-                ->orWhere('tipo', 'like', "%{$search}%");
+                ->orWhere('servicio', 'like', "%{$search}%");
             })
             ->when($status, function ($query, $status) {
                 $query->where('status', $status);
@@ -73,7 +73,7 @@ class HistorialCitasController extends Controller
             'doctor:id,name,specialty'
         ])
             ->where('patient_id', $user->id)
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo','nota')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio','nota')
             ->orderBy('fecha', 'desc')
             ->orderBy('hora', 'desc')
             ->paginate($perPage);

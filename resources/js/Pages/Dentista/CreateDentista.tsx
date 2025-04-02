@@ -8,9 +8,9 @@ import Swal from 'sweetalert2';
 import ButtonVisibility from '@/Components/Form/ButtonVisibility';
 import ReusableButton from '@/Components/Form/ReusableButton';
 import ButtonCancel from '@/Components/Form/ButtonCancel';
-import ReusableSelect from '@/Components/Table/ReusableSelect';
 import { Inertia } from '@inertiajs/inertia';
 import useAvailability, { diasSemana } from '@/Components/hooks/useAvailability';
+import MultiSelectArray from '@/Components/ui/MultiSelectArray';
 
 
 const CreateDentistaForm = () => {
@@ -21,7 +21,7 @@ const CreateDentistaForm = () => {
         password: '',
         role: 'doctor',
         password_confirmation: '',
-        specialty: '',
+        specialty: [],
         availability: JSON.stringify({
             monday: { active: false, start: '09:00', end: '18:00' },
             tuesday: { active: false, start: '09:00', end: '18:00' },
@@ -31,6 +31,7 @@ const CreateDentistaForm = () => {
             saturday: { active: false, start: '09:00', end: '14:00' },
             sunday: { active: false, start: '09:00', end: '14:00' },
         }),
+        license_number: '',
     });
 
 
@@ -39,6 +40,12 @@ const CreateDentistaForm = () => {
     const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
 
+    const handleChange = (field: string, value: any) => {
+        setData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
 
     const { availabilityData, handleAvailabilityChange } = useAvailability(
         data.availability,
@@ -47,7 +54,7 @@ const CreateDentistaForm = () => {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(data);
+       // console.log(data);
         post(route('dentista.store'), {
             onSuccess: () => {
                 Swal.fire({
@@ -101,7 +108,7 @@ const CreateDentistaForm = () => {
                                 <div className="flex flex-wrap ">
 
                                     <div className='w-full md:w-1/2 my-3 px-2'>
-                                        <InputLabel htmlFor="name" value="Nombre" />
+                                        <InputLabel htmlFor="name" value="Nombre completo" />
                                         <TextInput
                                             id="name"
                                             type="text"
@@ -114,37 +121,57 @@ const CreateDentistaForm = () => {
                                         <InputError message={errors.name} className="mt-2" />
                                     </div>
 
-                                    <div className='w-full md:w-1/2 my-3 px-2'>
-                                        <InputLabel htmlFor="phone" value="Teléfono" />
-                                        <TextInput
-                                            id="phone"
-                                            type="text"
-                                            name="phone"
-                                            value={data.phone}
-                                            className="mt-1 block w-full "
-                                            onChange={(e) => setData('phone', e.target.value)}
-                                            required
-                                        />
-                                        <InputError message={errors.phone} className="mt-2" />
+                                    <div className='w-full md:w-1/2 grid grid-cols-1 gap-6 md:gap-2 md:grid-cols-2 my-3 px-2'>
+                                        <div className='w-full'>
+                                            <InputLabel htmlFor="phone" value="Teléfono" />
+                                            <TextInput
+                                                id="phone"
+                                                type="text"
+                                                name="phone"
+                                                value={data.phone}
+                                                className="mt-1 block w-full"
+                                                onChange={(e) => setData('phone', e.target.value)}
+                                                required
+                                            />
+                                            <InputError message={errors.phone} className="mt-2" />
+                                        </div>
+                                        <div className='w-full'>
+                                            <InputLabel htmlFor="license_number" value="Cédula profesional" />
+                                            <TextInput
+                                                id="license_number"
+                                                type="text"
+                                                name="license_number"
+                                                value={data.license_number}
+                                                className="mt-1 block w-full "
+                                                onChange={(e) => setData('license_number', e.target.value)}
+                                                required
+                                            />
+                                            <InputError message={errors.license_number} className="mt-2" />
+                                        </div>
                                     </div>
 
                                     <div className='w-full md:w-1/2 my-3 px-2'>
                                         <InputLabel htmlFor="specialty" value="Especialidad" />
-                                        <ReusableSelect
-                                            id="specialty"
+                                        <MultiSelectArray
                                             name="specialty"
                                             value={data.specialty}
-                                            onChange={(e) => setData('specialty', e.target.value)}
-                                            required
+                                            onChange={(value) => handleChange("specialty", value)}
                                             options={[
-                                                { value: 'Ortodoncia', label: 'Ortodoncia' },
-                                                { value: 'Periodoncia', label: 'Periodoncia' },
-                                                { value: 'Endodoncia', label: 'Endodoncia' },
-                                                { value: 'Prostodoncia', label: 'Prostodoncia' },
-                                                { value: 'Cirugía Oral y Maxilofacial', label: 'Cirugía Oral y Maxilofacial' },
-                                                { value: 'Pedodoncia', label: 'Pedodoncia' },
+                                                { value: "odontologia_general", label: "Odontología General" },
+                                                { value: "ortodoncia", label: "Ortodoncia y Ortopedia Maxilofacial" },
+                                                { value: "endodoncia", label: "Endodoncia" },
+                                                { value: "periodoncia", label: "Periodoncia" },
+                                                { value: "cirugia_oral", label: "Cirugía Oral y Maxilofacial" },
+                                                { value: "odontopediatria", label: "Odontopediatría" },
+                                                { value: "prostodoncia", label: "Prostodoncia (Rehabilitación Oral)" },
+                                                { value: "estetica", label: "Odontología Estética" },
+                                                { value: "implantologia", label: "Implantología Oral" },
+                                                { value: "radiologia", label: "Radiología Oral y Maxilofacial" },
+                                                { value: "odontogeriatria", label: "Odontogeriatría" },
+                                                { value: "patologia_bucal", label: "Patología Bucal y Maxilofacial" },
+                                                { value: "odontologia_forense", label: "Odontología Forense" },
                                             ]}
-                                            className="w-full "
+                                            className="w-full"
                                         />
                                         <InputError message={errors.specialty} className="mt-2" />
                                     </div>

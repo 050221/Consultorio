@@ -12,6 +12,7 @@ import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableTextArea from '@/Components/ReusableTextArea';
 import { CitaPageProps } from '@/types';
 import AutoComplete from '@/Components/ui/AutoComplete';
+import MultiSelectArray from '@/Components/ui/MultiSelectArray';
 
 
 const CitasCreate = () => {
@@ -21,17 +22,25 @@ const CitasCreate = () => {
         patient_id: '',
         fecha: '',
         hora: '',
-        tipo: '',
+        servicio: [],
         status: '',
         nota: '',
+        is_emergency: false,
     });
 
     const { pacientes, doctores, citas } = usePage<CitaPageProps>().props;
 
+    
+    const handleChange = (field: string, value: any) => {
+        setData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Datos enviados desde el formulario:', data);
+        //console.log('Datos enviados desde el formulario:', data);
         post(route('citas.store'), {
             onSuccess: () => {
                 Swal.fire({
@@ -84,7 +93,7 @@ const CitasCreate = () => {
                 <div className="max-w-[1640px] mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white shadow sm:rounded-lg">
                         <div className="py-6 px-6 flex flex-wrap  ">
-                        <div className='w-full justify-center lg:w-4/12 py-4 lg:pr-6'>
+                            <div className='w-full justify-center lg:w-4/12 py-4 lg:pr-6'>
                                 <div>
                                     <h2 className="text-2xl font-semibold text-gray-800">
                                         Agendar Nueva Cita
@@ -110,23 +119,22 @@ const CitasCreate = () => {
                                         <div className='w-full my-3'>
                                             <InputLabel
                                                 htmlFor="name"
-                                                value="Servicio"
+                                                value="Servicio(s)"
                                             />
-                                            <ReusableSelect
+                                            <MultiSelectArray
+                                                name="servicio"
+                                                value={data.servicio}
+                                                onChange={(value) => handleChange("servicio", value)}
                                                 options={[
+                                                    { value: 'Rehabilitación', label: 'Rehabilitación' },
                                                     { value: 'Ortodoncia', label: 'Ortodoncia' },
-                                                    { value: 'Periodoncia', label: 'Periodoncia' },
+                                                    { value: 'Cirugía', label: 'Cirugía' },
+                                                    { value: 'Implantes', label: 'Implantes' },
                                                     { value: 'Endodoncia', label: 'Endodoncia' },
-                                                    { value: 'Prostodoncia', label: 'Prostodoncia' },
-                                                    { value: 'Cirugía Oral y Maxilofacial', label: 'Cirugía Oral y Maxilofacial' },
-                                                    { value: 'Pedodoncia', label: 'Pedodoncia' },
                                                 ]}
-                                                value={data.tipo}
-                                                onChange={(event) => setData('tipo', event.target.value)}
-                                                className="w-full mt-1"
-                                                required
+                                                className="w-full"
                                             />
-                                            <InputError message={errors.tipo} className="mt-2" />
+                                            <InputError message={errors.servicio} className="mt-2" />
                                         </div>
 
                                         <div className='w-full  my-3'>
@@ -210,6 +218,23 @@ const CitasCreate = () => {
                                             )}
                                             <InputError message={errors.nota} className="mt-2" />
                                         </div>
+
+                                        <div className='w-full my-3'>
+                                            <InputLabel htmlFor="is_emergency" value="¿Es una urgencia?" />
+                                            <div className="flex items-center">
+                                                <input
+                                                    id="is_emergency"
+                                                    type="checkbox"
+                                                    checked={data.is_emergency}
+                                                    onChange={(e) => setData('is_emergency', e.target.checked)}
+                                                    className="mr-2 w-5 h-5 text-sky-500 border-gray-300 rounded focus:ring-sky-500"
+                                                />
+                                                <label htmlFor="is_emergency" className="text-gray-700">Sí</label>
+                                            </div>
+                                            <InputError message={errors.is_emergency} className="mt-2" />
+                                        </div>
+
+                                    
                                     </div>
                                     <div className="flex justify-end gap-4 ">
                                         <ButtonCancel

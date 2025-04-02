@@ -1,10 +1,11 @@
+import ButtonVisibility from '@/Components/Form/ButtonVisibility';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 
 export default function ResetPassword({
     token,
@@ -19,6 +20,9 @@ export default function ResetPassword({
         password: '',
         password_confirmation: '',
     });
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -49,12 +53,12 @@ export default function ResetPassword({
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 relative">
                     <InputLabel htmlFor="password" value="Contraseña" />
 
                     <TextInput
                         id="password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         name="password"
                         value={data.password}
                         className="mt-1 block w-full"
@@ -62,18 +66,21 @@ export default function ResetPassword({
                         isFocused={true}
                         onChange={(e) => setData('password', e.target.value)}
                     />
-
+                    <ButtonVisibility
+                        onToggle={() => setShowPassword((prev) => !prev)}
+                        isPasswordVisible={showPassword}
+                    />
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 relative">
                     <InputLabel
                         htmlFor="password_confirmation"
                         value="Confirmar contraseña"
                     />
 
                     <TextInput
-                        type="password"
+                        type={showPasswordConfirmation ? 'text' : 'password'}
                         name="password_confirmation"
                         value={data.password_confirmation}
                         className="mt-1 block w-full"
@@ -82,7 +89,10 @@ export default function ResetPassword({
                             setData('password_confirmation', e.target.value)
                         }
                     />
-
+                    <ButtonVisibility
+                        onToggle={() => setShowPasswordConfirmation((prev) => !prev)}
+                        isPasswordVisible={showPasswordConfirmation}
+                    />
                     <InputError
                         message={errors.password_confirmation}
                         className="mt-2"

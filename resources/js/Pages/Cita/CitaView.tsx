@@ -29,7 +29,7 @@ const CitaView: React.FC = () => {
       <Head title="Detalles de la Cita" />
 
       <div className="py-12 px-4 sm:px-0">
-        <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden ">
+        <div className="max-w-4xl relative mx-auto bg-white shadow-xl rounded-xl overflow-hidden ">
           {/* Encabezado */}
           <div className="bg-gradient-to-r from-sky-500 to-blue-700 dark:from-sky-600 dark:to-blue-800 text-white p-5 ">
 
@@ -43,7 +43,16 @@ const CitaView: React.FC = () => {
               <LabelValue label="Dentista" value={cita.doctor?.name || "No asignado"} />
               <LabelValue label="Fecha" value={formattedDate} />
               <LabelValue label="Hora" value={formattedTime} />
-              <LabelValue label="Servicio" value={cita.tipo || "No especificado"} />
+              <div>
+                <label className="font-medium text-gray-600" htmlFor="servicio">Servicio(s):</label>
+                {cita.servicio && cita.servicio.length > 0 ? (
+                  <p className="text-base font-medium text-gray-900">
+                    {cita.servicio.map((servicio) => servicio.label).join(", ")}
+                  </p>
+                ) : (
+                  <p className="text-lg font-medium text-gray-900">No especificado</p>
+                )}
+              </div>
               <LabelValue label="Estado" className={getEventStyle(cita.status)} value={cita.status || "No definido"} />
               <LabelValue label="Registrada el" value={formattedCreatedAt} />
             </div>
@@ -75,6 +84,34 @@ const CitaView: React.FC = () => {
               Volver
             </ReusableButton>
           </div>
+          {!!cita.is_emergency && (
+            <div className="absolute bottom-5 right-5 bg-red-100 border border-red-500 text-red-700 rounded-lg w-40 md:w-80 flex items-center p-2 md:p-3 shadow-md animate-bounce">
+              <span className="flex items-center font-bold">
+                <svg className="w-5 h-5 mr-2 text-red-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-9-4a1 1 0 112 0v4a1 1 0 01-2 0V6zm1 8a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" clipRule="evenodd" />
+                </svg>
+                Cita urgente
+              </span>
+            </div>
+          )}
+          {/*}}
+          {cita.is_emergency && (
+            <div className="p-3 bg-red-500 text-white rounded-lg flex items-center justify-center shadow-md border border-red-700">
+              <svg className="w-6 h-6 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-9-4a1 1 0 112 0v4a1 1 0 01-2 0V6zm1 8a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" clipRule="evenodd" />
+              </svg>
+              <span className="text-lg font-bold">Cita Urgente</span>
+            </div>
+          )}
+
+          {cita.is_emergency && (
+            <div className="fixed bottom-16 right-7 bg-red-600 text-white p-3 rounded-lg shadow-lg flex items-center animate-bounce">
+              <svg className="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-9-4a1 1 0 112 0v4a1 1 0 01-2 0V6zm1 8a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" clipRule="evenodd" />
+              </svg>
+              <span className="font-bold">Cita Urgente</span>
+            </div>
+          )}*/}
         </div>
       </div>
     </AuthenticatedLayout>

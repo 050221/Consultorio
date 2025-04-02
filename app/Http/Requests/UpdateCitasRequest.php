@@ -27,8 +27,9 @@ class UpdateCitasRequest extends FormRequest
             'fecha' => 'required|date', 
             'hora' => 'required',
             'status' => 'required|string',
-            'tipo' => 'required|string',
-            'nota' => 'nullable'
+            'servicio' => 'required|array',
+            'nota' => 'nullable',
+            'is_emergency' => 'nullable|boolean',
         ];
     }
 
@@ -41,7 +42,9 @@ class UpdateCitasRequest extends FormRequest
             'hora.required' => 'La hora es obligatoria.',
             'fecha.date' => 'La fecha debe ser válida.',
             'status.required' => 'El estado es obligatorio.',
-            'tipo.required' => 'El tipo de cita es obligatorio.',
+            'servicio.required' => 'El servicio de la cita es obligatorio.',
+            'servicio.array' => 'El servicio de la cita debe ser un arreglo.',
+            'is_emergency.boolean' => 'El campo de urgencia debe ser verdadero o falso.',
         ];
     }
 }

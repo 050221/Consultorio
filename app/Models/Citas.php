@@ -17,8 +17,9 @@ class Citas extends Model
         'fecha',
         'hora',
         'status',
-        'tipo',
-        'nota'
+        'servicio',
+        'nota',
+        'is_emergency',  // Si es urgencia o no
     ];
 
 
@@ -39,5 +40,12 @@ class Citas extends Model
     public function doctor()
     {
         return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'servicio' => 'array',
+        ];
     }
 }

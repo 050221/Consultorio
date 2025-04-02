@@ -14,8 +14,9 @@ class HistorialCitas extends Model
         'fecha',
         'hora',
         'status',
-        'tipo',
-        'nota'
+        'servicio',
+        'nota',
+        'is_emergency'
     ];
 
     /** @use HasFactory<\Database\Factories\HistorialCitasFactory> */
@@ -30,5 +31,12 @@ class HistorialCitas extends Model
     public function doctor()
     {
         return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'servicio' => 'array',
+        ];
     }
 }

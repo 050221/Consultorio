@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { Inertia } from "@inertiajs/inertia";
 import ToggleSwitch from "@/Components/ui/ToggleSwitch";
 import useAvailability, { diasSemana } from "@/Components/hooks/useAvailability";
+import MultiSelectArray from '@/Components/ui/MultiSelectArray';
 
 
 const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
@@ -24,7 +25,9 @@ const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
         activo: dentista.activo,
         role: "Doctor",
         specialty: dentista.specialty,
-        availability: dentista.availability
+        availability: dentista.availability,
+        license_number: dentista.license_number,
+
     });
     const { availabilityData, handleAvailabilityChange } = useAvailability(
         data.availability,
@@ -113,6 +116,45 @@ const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
                                         )}
                                     </div>
 
+                                    <div className='w-full md:w-1/2 grid grid-cols-1 gap-6 md:gap-2 md:grid-cols-2 my-3 px-2'>
+                                        <div className="w-full">
+                                            <InputLabel htmlFor="phone" value="Teléfono" />
+                                            <TextInput
+                                                id="phone"
+                                                type="text"
+                                                value={data.phone}
+                                                className="mt-1 block w-full"
+                                                onChange={handleChange}
+                                                required
+                                                aria-invalid={!!errors.phone}
+                                                aria-describedby="phone-error"
+                                            />
+                                            {errors.phone && (
+                                                <p id="phone-error" className="mt-2 text-sm text-red-600">
+                                                    {errors.phone}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="w-full">
+                                            <InputLabel htmlFor="license_number" value="Cédula profesional" />
+                                            <TextInput
+                                                id="license_number"
+                                                type="text"
+                                                value={data.license_number}
+                                                className="mt-1 block w-full"
+                                                onChange={handleChange}
+                                                required
+                                                aria-invalid={!!errors.license_number}
+                                                aria-describedby="phone-error"
+                                            />
+                                            {errors.phone && (
+                                                <p id="phone-error" className="mt-2 text-sm text-red-600">
+                                                    {errors.license_number}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+
                                     <div className='w-full md:w-1/2 my-3 px-2'>
                                         <InputLabel htmlFor="email" value="Correo electrónico" />
                                         <TextInput
@@ -132,42 +174,31 @@ const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
                                         )}
                                     </div>
 
-                                    <div className='w-full md:w-1/2 my-3 px-2'>
-                                        <InputLabel htmlFor="phone" value="Teléfono" />
-                                        <TextInput
-                                            id="phone"
-                                            type="text"
-                                            value={data.phone}
-                                            className="mt-1 block w-full"
-                                            onChange={handleChange}
-                                            required
-                                            aria-invalid={!!errors.phone}
-                                            aria-describedby="phone-error"
-                                        />
-                                        {errors.phone && (
-                                            <p id="phone-error" className="mt-2 text-sm text-red-600">
-                                                {errors.phone}
-                                            </p>
-                                        )}
-                                    </div>
 
                                     <div className='w-full md:w-1/2 my-3 px-2'>
                                         <InputLabel htmlFor="specialty" value="Especialidad" />
-                                        <ReusableSelect
-                                            id="specialty"
+                                        <MultiSelectArray
                                             name="specialty"
-                                            value={data.specialty}
-                                            onChange={(e) => setData('specialty', e.target.value)}
-                                            required
+                                            value={data.specialty || []} // Asegurar que sea un array
+                                            onChange={(value) => setData("specialty", value)} // Usar setData directamente
                                             options={[
-                                                { value: 'Ortodoncia', label: 'Ortodoncia' },
-                                                { value: 'Periodoncia', label: 'Periodoncia' },
-                                                { value: 'Endodoncia', label: 'Endodoncia' },
-                                                { value: 'Prostodoncia', label: 'Prostodoncia' },
-                                                { value: 'Cirugía Oral y Maxilofacial', label: 'Cirugía Oral y Maxilofacial' },
-                                                { value: 'Pedodoncia', label: 'Pedodoncia' },
+                                                { value: "odontologia_general", label: "Odontología General" },
+                                                { value: "ortodoncia", label: "Ortodoncia y Ortopedia Maxilofacial" },
+                                                { value: "endodoncia", label: "Endodoncia" },
+                                                { value: "periodoncia", label: "Periodoncia" },
+                                                { value: "cirugia_oral", label: "Cirugía Oral y Maxilofacial" },
+                                                { value: "odontopediatria", label: "Odontopediatría" },
+                                                { value: "prostodoncia", label: "Prostodoncia (Rehabilitación Oral)" },
+                                                { value: "estetica", label: "Odontología Estética" },
+                                                { value: "implantologia", label: "Implantología Oral" },
+                                                { value: "radiologia", label: "Radiología Oral y Maxilofacial" },
+                                                { value: "odontogeriatria", label: "Odontogeriatría" },
+                                                { value: "patologia_bucal", label: "Patología Bucal y Maxilofacial" },
+                                                { value: "odontologia_forense", label: "Odontología Forense" },
                                             ]}
+                                            className="w-full"
                                         />
+
                                         {errors.specialty && (
                                             <p id="birthdate-error" className="mt-2 text-sm text-red-600">
                                                 {errors.specialty}
@@ -175,7 +206,7 @@ const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
                                         )}
                                     </div>
 
-                                   <div className='w-full my-4 px-2'>
+                                    <div className='w-full my-4 px-2'>
                                         <div className="col-span-2">
                                             <InputLabel value="Disponibilidad" />
                                             <div className="grid gap-4 p-4 border rounded-lg bg-gray-50 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -222,7 +253,7 @@ const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
                                         </div>
                                     </div>
 
-                                    
+
 
                                     <div className='w-full md:w-1/2 my-3 px-2'>
                                         <InputLabel htmlFor="activo" value="Activo" />

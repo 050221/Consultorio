@@ -10,21 +10,22 @@ import { Inertia } from '@inertiajs/inertia';
 import Modal from '@/Components/ui/Modal';
 import useModal from '@/Components/ui/UseModal';
 import EditCitaForm from './EditCitaForm';
-import { formatDate, formatHora, getEventStyle } from '@/Components/utils/dateUtils';
+import { formatDateComplete, formatHora, getEventStyle } from '@/Components/utils/dateUtils';
 import FiltrosPopover from '@/Components/Table/FiltrosPopover';
 import ReusableSelect from '@/Components/Table/ReusableSelect';
 import ReusableButton from '@/Components/Form/ReusableButton';
-import { Cita, CitasPageProps } from '@/types';
+import { Cita, CitasPageProps, Servicio } from '@/types';
 import { useFilters } from '@/Components/hooks/useFilters';
 import { usePerPage } from '@/Components/hooks/usePerPage';
 import RoleGuard from '@/Components/auth/RoleGuard';
 
 
-
+// muetra las columnas de la tabla que pertenese al admin
 const columnsCitas = [
     { label: 'Paciente', key: 'patient.name' },
     { label: 'Dentista', key: 'doctor.name' },
-    { label: 'Fecha', key: 'fecha', format: formatDate },
+    { label: 'Servicio(s)', key: 'servicio', format: (servicios: Servicio[]) => servicios.map(s => s.label).join(', ') },
+    { label: 'Fecha', key: 'fecha', format: formatDateComplete },
     { label: 'Hora', key: 'hora', format: formatHora },
     {
         label: 'Estado', key: 'status', format: (status: string) => (
@@ -35,10 +36,11 @@ const columnsCitas = [
     },
 ];
 
+// muetra las columnas de la tabla que pertenese al doctor
 const columnsCitasDentista = [
     { label: 'Paciente', key: 'patient.name' },
-    { label: 'Servicio', key: 'tipo' },
-    { label: 'Fecha', key: 'fecha', format: formatDate },
+    { label: 'Servicio(s)', key: 'servicio', format: (servicios: Servicio[]) => servicios.map(s => s.label).join(', ') },
+    { label: 'Fecha', key: 'fecha', format: formatDateComplete },
     { label: 'Hora', key: 'hora', format: formatHora },
     {
         label: 'Estado', key: 'status', format: (status: string) => (

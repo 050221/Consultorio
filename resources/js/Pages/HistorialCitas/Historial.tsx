@@ -49,7 +49,7 @@ const Historial = () => {
                             </div>
                             <div className="w-full sm:w-1/2 my-2 md:my-0">
                                 <div className='ml-auto w-full flex  justify-end gap-4'>
-                                    <RoleGuard allowedRoles={['Admin', 'Doctor','receptionist']}>
+                                    <RoleGuard allowedRoles={['Admin', 'Doctor', 'receptionist']}>
                                         <div className='mt-1'>
                                             <FiltrosPopover
                                                 date={date}
@@ -75,8 +75,7 @@ const Historial = () => {
                             </div>
                         </div>
 
-                        <RoleGuard allowedRoles={['admin','receptionist']}>
-
+                        <RoleGuard allowedRoles={['admin', 'receptionist']}>
                             {/* Añadimos un loader condicional */}
                             {isLoading ? (
                                 <div className="flex justify-center items-center py-4">
@@ -162,7 +161,6 @@ const Historial = () => {
                         </RoleGuard>
 
                         <RoleGuard allowedRoles={['doctor']}>
-
                             {/* Añadimos un loader condicional */}
                             {isLoading ? (
                                 <div className="flex justify-center items-center py-4">
@@ -207,13 +205,19 @@ const Historial = () => {
                                                         <td className="px-4 py-3">
                                                             <div className="flex items-center gap-2">
                                                                 <Stethoscope className="w-5 h-5 text-purple-500" />
-                                                                <span>{cita.tipo}</span>
+                                                                {cita.servicio && cita.servicio.length > 0 ? (
+                                                                    <p className="text-base font-medium text-gray-500">
+                                                                        {cita.servicio.map((servicio) => servicio.label).join(", ")}
+                                                                    </p>
+                                                                ) : (
+                                                                    <p className="text-lg font-medium text-gray-900">No especificado</p>
+                                                                )}
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-3">
                                                             <div className="flex items-center gap-2">
                                                                 <Calendar className="w-5 h-5 text-orange-500" />
-                                                                <span>{formatDateComplete(cita.fecha)}</span>
+                                                                <span className='font-medium text-gray-500'>{formatDateComplete(cita.fecha)}</span>
                                                             </div>
                                                         </td>
                                                         <td className="px-4 py-3">
@@ -263,8 +267,15 @@ const Historial = () => {
 
                                         {/* Contenido de la cita */}
                                         <div className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                                            <h2 className="text-xl font-bold text-gray-700 flex items-center gap-2">
-                                                {cita.tipo}
+                                            <h2 className="text-xl font-bold text-sky-700 flex items-center gap-2">
+                                                Servicio(s) de 
+                                                {cita.servicio && cita.servicio.length > 0 ? (
+                                                    <p >
+                                                        {cita.servicio.map((servicio) => servicio.label).join(", ")}
+                                                    </p>
+                                                ) : (
+                                                    <p className="text-lg font-medium text-gray-900">No especificado</p>
+                                                )}
                                             </h2>
 
                                             <div className="mt-4">
@@ -289,7 +300,7 @@ const Historial = () => {
                                                 </p>
                                                 <p className="mt-2 text-sm text-gray-600 flex items-center gap-2">
                                                     <FileText className="w-5 h-5 text-gray-500" />
-                                                    {cita.nota? cita.nota : <span className="italic text-gray-500">Sin nota</span>}
+                                                    {cita.nota ? cita.nota : <span className="italic text-gray-500">Sin nota</span>}
                                                 </p>
                                             </div>
                                         </div>
@@ -301,7 +312,7 @@ const Historial = () => {
 
 
                         {/* Paginación */}
-                        <RoleGuard allowedRoles={['admin','receptionist']}>
+                        <RoleGuard allowedRoles={['admin', 'receptionist']}>
                             <div className="mt-4 flex justify-center">
                                 <Pagination links={historialC.links} />
                             </div>

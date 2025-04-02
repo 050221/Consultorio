@@ -10,7 +10,7 @@ const ShowDentista: React.FC<DentistaFormProps> = ({ dentista }) => {
             <Head title="Detalles del Dentista" />
             <hr className=" border border-sky-500" />
 
-            <div className="grid gap-4 mt-6 grid-cols-1 md:grid-cols-2">
+            <div className="grid gap-4 mt-6  ">
                 {/* Nombre */}
                 <div className="flex items-center gap-4">
                     <div className="p-3 bg-blue-50 rounded-lg">
@@ -40,7 +40,15 @@ const ShowDentista: React.FC<DentistaFormProps> = ({ dentista }) => {
                     </div>
                     <div>
                         <p className="text-sm text-gray-500">Especialidad</p>
-                        <p className="text-lg font-medium text-gray-900">{dentista.specialty}</p>
+                        {dentista.specialty && dentista.specialty.length > 0 ? (
+                            dentista.specialty.map((specialty) => (
+                                <p key={specialty.value} className="text-lg font-medium text-gray-900">
+                                    {specialty.label},
+                                </p>
+                            ))
+                        ) : (
+                            <p className="text-lg font-medium text-gray-900">No especificada</p>
+                        )}
                     </div>
                 </div>
 
@@ -81,8 +89,7 @@ const ShowDentista: React.FC<DentistaFormProps> = ({ dentista }) => {
 
                     </div>
                     <div className="ml-16">
-
-                        <AvailabilityDisplay availabilityJson={dentista.availability} />
+                        <AvailabilityDisplay availabilityJson={dentista.availability } />
                     </div>
                 </div>
             </div>

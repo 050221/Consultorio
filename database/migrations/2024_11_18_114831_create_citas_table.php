@@ -17,9 +17,10 @@ return new class extends Migration
             $table->foreignId('patient_id')->constrained('users')->onDelete('cascade'); // Relación con pacientes
             $table->date('fecha');
             $table->time('hora');
-            $table->string('tipo', 50)->nullable()->index();
+            $table->json('servicio')->index();
             $table->string('status')->default('Pendiente');
             $table->longText('nota')->nullable();
+            $table->boolean('is_emergency')->default(false); // Si es urgencia o no
             $table->timestamps();
         });
     }

@@ -59,8 +59,10 @@ class MoveExpiredAppointments extends Command
                     'fecha' => $cita->fecha,
                     'hora' => $cita->hora,
                     'status' => $nuevoStatus,  
-                    'tipo' => $cita->tipo,
+                    'servicio' => $cita->servicio,
                     'nota' => $cita->nota,
+                    'is_emergency' => $cita->is_emergency,
+
                 ]);
 
                 // Eliminar la cita original

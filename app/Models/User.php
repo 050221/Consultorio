@@ -37,7 +37,8 @@ class User extends Authenticatable
         'activo',
         'birthdate',
         'specialty',
-        'availability'
+        'availability',
+        'license_number',
     ];
 
     /**
@@ -81,6 +82,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'specialty' => 'array',
             'availability' => 'array',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',

@@ -19,7 +19,6 @@ import ShowDentista from "./ShowDentista";
 const columnsdentistas = [
     { label: 'Nombre', key: 'name' },
     { label: 'Telefono', key: 'phone', },
-    { label: 'Especialidad', key: 'specialty' },
     {
         key: 'activo',
         label: 'Estado',

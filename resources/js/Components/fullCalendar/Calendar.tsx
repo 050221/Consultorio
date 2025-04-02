@@ -6,17 +6,17 @@ import esLocale from '@fullcalendar/core/locales/es';
 import { formatDate, formatHora, getEventStyle, getStatusEmoji, getStatusClassName } from '@/Components/utils/dateUtils';
 import { Popover, PopoverContent, PopoverTrigger } from "@/Components/ui/popover";
 import './estilos.css';
-import { Cita } from '@/types';
+import { Cita, Servicio } from '@/types';
 
 
 interface CalendarProps {
   citas: Cita[];
 }
 
-const CitasCalendar:React.FC<CalendarProps> = ({
+const CitasCalendar: React.FC<CalendarProps> = ({
   citas
 }) => {
-  
+  // Configuración de eventos para el calendario  
   const calendarEvents = useMemo(() => {
     return citas.map((cita) => ({
       id: cita.id.toString(),
@@ -50,14 +50,19 @@ const CitasCalendar:React.FC<CalendarProps> = ({
             <h3 className="text-lg font-semibold">Detalles de la Cita</h3>
             <div className="grid grid-cols-2 gap-2">
               <span className="font-medium">Paciente:</span>
-              <span>{cita.patient?.name  || 'No especificado'}</span>
+              <span>{cita.patient?.name || 'No especificado'}</span>
 
               <span className="font-medium">Dentista:</span>
-              <span>{cita.doctor?.name  || 'No especificado'}</span>
+              <span>{cita.doctor?.name || 'No especificado'}</span>
 
-              <span className="font-medium">Servicio:</span>
-              <span>{cita.tipo}</span>
-
+              <span className="font-medium">Servicio(s):</span>
+              {cita.servicio && cita.servicio.length > 0 ? (
+                <span className="text-base font-medium text-gray-900">
+                  {cita.servicio.map((servicio: Servicio) => servicio.value).join(", ")}
+                </span>
+              ) : (
+                <p className="text-lg font-medium text-gray-900">No especificado</p>
+              )}
               <span className="font-medium">Fecha:</span>
               <span>{formatDate(cita.fecha)}</span>
 
@@ -80,6 +85,16 @@ const CitasCalendar:React.FC<CalendarProps> = ({
               </div>
             )}
           </div>
+          {!!cita.is_emergency && (
+            <div className=" bg-red-100 border border-red-500 text-red-700 rounded-lg w-full flex items-center p-1 p md:p-2 mt-3 shadow-md animate-pulse">
+              <span className="flex items-center font-bold">
+                <svg className="w-5 h-5 mr-2 text-red-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-9-4a1 1 0 112 0v4a1 1 0 01-2 0V6zm1 8a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" clipRule="evenodd" />
+                </svg>
+                Cita urgente
+              </span>
+            </div>
+          )}
         </PopoverContent>
       </Popover>
     );

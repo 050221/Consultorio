@@ -28,7 +28,7 @@ class CitasController extends Controller
             'patient:id,name',
             'doctor:id,name,specialty'
         ])
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo', 'nota')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio', 'nota', 'is_emergency')
             ->when($search, function ($query, $search) {
                 $query->whereHas('patient', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
@@ -57,7 +57,7 @@ class CitasController extends Controller
                 'doctor:id,name,specialty' // Relación con el doctor
             ])
             ->where('doctor_id', $user->id) // Filtrar por el doctor autenticado
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo', 'nota')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio', 'nota','is_emergency')
             ->when(!empty($search), function ($query) use ($search) {
                 $query->whereHas('patient', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
@@ -122,7 +122,7 @@ class CitasController extends Controller
         $citas = Citas::with([
             'patient:id,name',
             'doctor:id,name,specialty'
-        ])->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo')
+        ])->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio','is_emergency')
             ->get();
 
         // Retorna la vista con los datos
@@ -148,8 +148,9 @@ class CitasController extends Controller
             'fecha' => $cita['fecha'],
             'hora' => $cita['hora'],
             'status' => $cita['status'],
-            'tipo' => $cita['tipo'],
+            'servicio' => $cita['servicio'],
             'nota' => $cita['nota'],
+            'is_emergency' => $cita['is_emergency'] ?? false, 
         ]);
 
         return redirect()->back()->with('success', 'Cita agendada exitosamente');

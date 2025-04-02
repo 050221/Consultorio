@@ -2,7 +2,7 @@ import Calendar from '@/Components/fullCalendar/Calendar';
 import Accordion from '@/Components/ui/Accordion';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, usePage } from '@inertiajs/react';
-import { Cita, DashboardPageProps } from '@/types';
+import { Cita, DashboardPageProps, Servicio } from '@/types';
 import { CalendarDays, Users, AlertCircle, LayoutDashboard, Stethoscope, Check, Clock, TrendingUp, Info, UserCheck, BarChart2, CalendarDaysIcon, Phone, Mail, User, FileText, } from 'lucide-react';
 import Pagination from '@/Components/Table/Pagination';
 import RoleGuard from '@/Components/auth/RoleGuard';
@@ -221,7 +221,13 @@ export default function Dashboard() {
                                         <div key={cita.id} className="bg-white p-5 rounded-lg shadow-md grid grid-cols-1 sm:grid-cols-2  gap-4 border-l-4 border-sky-500">
                                             <div className="space-y-2">
 
-                                                <h4 className="text-lg font-semibold text-sky-600">Servicio de  {cita.tipo}</h4>
+                                                <h4 className="text-lg font-semibold text-sky-600">Servicio(s) de {cita.servicio && cita.servicio.length > 0 ? (
+                                                    <span className="text-lg font-semibold text-sky-600">
+                                                        {cita.servicio.map((servicio: Servicio) => servicio.value).join(", ")}
+                                                    </span>
+                                                ) : (
+                                                    <p className="text-lg font-medium text-gray-900">No especificado</p>
+                                                )}</h4>
                                                 <p className="text-sm text-gray-700 flex items-center gap-2">
                                                     <CalendarDays className="w-5 h-5 text-gray-500" />
                                                     {formatDateComplete(cita.fecha)}

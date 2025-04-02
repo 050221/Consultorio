@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'patient:id,name',
             'doctor:id,name,specialty'
         ])
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio','is_emergency')
             ->get();
 
         $citasHoy = Citas::with([
@@ -28,7 +28,7 @@ class DashboardController extends Controller
             'doctor:id,name,specialty'
         ])
             ->where('fecha', today())
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio','is_emergency')
             ->paginate(5);
 
         $totalPacientes = User::whereRole('Patient')->count();
@@ -70,7 +70,7 @@ class DashboardController extends Controller
             'doctor:id,name,specialty'
         ])
             ->where('patient_id', $user->id)
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo', 'nota')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio', 'nota')
             ->get();
 
         $citasDentista  = Citas::with([
@@ -78,7 +78,7 @@ class DashboardController extends Controller
             'doctor:id,name,specialty'
         ])
             ->where('doctor_id', $user->id)
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio', 'is_emergency')
             ->get();
 
         $citasDentistaHoy  = Citas::with([
@@ -87,7 +87,7 @@ class DashboardController extends Controller
         ])
             ->where('doctor_id', $user->id)
             ->where('fecha', today())
-            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'tipo')
+            ->select('id', 'patient_id', 'doctor_id', 'fecha', 'hora', 'status', 'servicio', 'is_emergency')
             ->paginate(5);
 
         $totalCitasDentista = Citas::where('doctor_id', $user->id)->count();

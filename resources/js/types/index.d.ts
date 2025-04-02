@@ -12,8 +12,19 @@ export interface User {
 
 
 export interface Doctor extends User {
-    specialty: string;
+    specialty: Specialty[];
     availability: string;
+    license_number: string;
+}
+
+export interface Specialty {
+    value: string;
+    label: string;
+}
+
+export interface Servicio {
+    value: string;
+    label: string;
 }
 
 export type Recepcionista = Omit<User, 'birthdate'>;
@@ -24,10 +35,11 @@ export interface Cita {
     doctor_id: number;
     fecha: string;
     hora: string;
-    tipo: string;
+    servicio: Servicio[];
     status: string;
     nota?: string;
     created_at: string;
+    is_emergency: boolean;
     patient: User;  
     doctor: Doctor; 
 }

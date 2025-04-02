@@ -22,8 +22,9 @@ return new class extends Migration
             $table->boolean('activo')->default(true); 
             $table->date('birthdate')->nullable()->index();
             // Campos para roles específicos
-            $table->string('specialty', 50)->nullable(); // Para doctores
-            $table->json('availability')->nullable(); // Horarios laborales en JSON
+            $table->json('specialty')->nullable(); // Para doctores
+            $table->json('availability')->nullable();
+            $table->string('license_number')->nullable(); // Para doctores
           
             $table->rememberToken();
             $table->timestamps();

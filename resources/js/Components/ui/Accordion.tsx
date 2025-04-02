@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Info } from 'lucide-react';
-import { Cita } from '@/types';
-import { formatDate, formatHora, getEventStyle } from '@/Components/utils/dateUtils';
+import { Cita, Servicio } from '@/types';
+import { formatHora, getEventStyle } from '@/Components/utils/dateUtils';
 import { Inertia } from '@inertiajs/inertia';
 
 interface AccordionProps {
@@ -67,8 +67,14 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
                     <span>{cita.doctor?.name || 'No disponible'}</span>
                   </li>
                   <li className="flex items-center">
-                    <span className="font-semibold w-24">Servicio:</span>
-                    <span>{cita.tipo || 'no disponible'}</span>
+                    <span className="font-semibold w-24">Servicio(s):</span>
+                    {cita.servicio && cita.servicio.length > 0 ? (
+                      <span >
+                        {cita.servicio.map((servicio: Servicio) => servicio.value).join(", ")}
+                      </span>
+                    ) : (
+                      <p className="text-lg font-medium text-gray-900">No especificado</p>
+                    )}
                   </li>
                   <li className="flex items-center">
                     <span className="font-semibold w-24">Hora:</span>
@@ -77,6 +83,18 @@ const Accordion: React.FC<AccordionProps> = ({ citas, className = '' }) => {
                   <li className="flex items-center">
                     <span className="font-semibold w-24">Estado:</span>
                     <span className={`font-medium ${getEventStyle(cita.status)}`}>{cita.status}</span>
+                  </li>
+                  <li className="flex items-center">
+                    {!!cita.is_emergency && (
+                      <div className=" bg-red-100 border border-red-500 text-red-700 rounded-lg w-full  flex items-center p-1 p md:p-2 shadow-md animate-pulse">
+                        <span className="flex items-center font-bold">
+                          <svg className="w-5 h-5 mr-2 text-red-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M18 10c0 4.418-3.582 8-8 8s-8-3.582-8-8 3.582-8 8-8 8 3.582 8 8zm-9-4a1 1 0 112 0v4a1 1 0 01-2 0V6zm1 8a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" clipRule="evenodd" />
+                          </svg>
+                          Cita urgente
+                        </span>
+                      </div>
+                    )}
                   </li>
                   <li className="flex items-center justify-end mt-4">
                     <button

@@ -52,7 +52,6 @@ class DoctorController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-
        
         $data = $request->validated();
 
@@ -63,6 +62,7 @@ class DoctorController extends Controller
             'role' => 'doctor',
             'specialty' => $data['specialty'],
             'availability' => $data['availability'],
+            'license_number' => $data['license_number'],
             'password' => bcrypt($data['password']),
 
         ]);
