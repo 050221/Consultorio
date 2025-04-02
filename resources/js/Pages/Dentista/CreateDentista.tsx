@@ -151,7 +151,7 @@ const CreateDentistaForm = () => {
                                     </div>
 
                                     <div className='w-full md:w-1/2 my-3 px-2'>
-                                        <InputLabel htmlFor="specialty" value="Especialidad" />
+                                        <InputLabel htmlFor="specialty" value="Especialidad(s)" />
                                         <MultiSelectArray
                                             name="specialty"
                                             value={data.specialty}

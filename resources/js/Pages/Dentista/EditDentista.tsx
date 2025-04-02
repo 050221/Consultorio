@@ -5,7 +5,7 @@ import ReusableButton from "@/Components/Form/ReusableButton";
 import InputLabel from "@/Components/InputLabel";
 import ReusableSelect from "@/Components/Table/ReusableSelect";
 import TextInput from "@/Components/TextInput";
-import { DentistaFormProps } from "@/types";
+import { DentistaFormProps, Specialty } from "@/types";
 import Swal from "sweetalert2";
 import { Inertia } from "@inertiajs/inertia";
 import ToggleSwitch from "@/Components/ui/ToggleSwitch";
@@ -15,8 +15,8 @@ import MultiSelectArray from '@/Components/ui/MultiSelectArray';
 
 const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
 
-    console.log(dentista);
-
+   // console.log(dentista);
+    
 
     const { data, setData, put, processing, errors } = useForm({
         name: dentista.name,
@@ -29,6 +29,14 @@ const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
         license_number: dentista.license_number,
 
     });
+
+    const handleChange2 = (field: string, value: any) => {
+        setData((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+    
     const { availabilityData, handleAvailabilityChange } = useAvailability(
         data.availability,
         setData
@@ -176,11 +184,11 @@ const EditDentistaForm: React.FC<DentistaFormProps> = ({ dentista }) => {
 
 
                                     <div className='w-full md:w-1/2 my-3 px-2'>
-                                        <InputLabel htmlFor="specialty" value="Especialidad" />
+                                        <InputLabel htmlFor="specialty" value="Especialidad(s)" />
                                         <MultiSelectArray
                                             name="specialty"
                                             value={data.specialty || []} // Asegurar que sea un array
-                                            onChange={(value) => setData("specialty", value)} // Usar setData directamente
+                                            onChange={(value) => handleChange2("specialty", value)}
                                             options={[
                                                 { value: "odontologia_general", label: "Odontología General" },
                                                 { value: "ortodoncia", label: "Ortodoncia y Ortopedia Maxilofacial" },
