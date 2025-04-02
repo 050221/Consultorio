@@ -27,11 +27,11 @@ class UserSeeder extends Seeder
         $user->assignRole('admin');
 
         
-
+/*
         User::factory(7)->doctor()->create();
         User::factory(50)->paciente()->create();
         User::factory(4)->receptionist()->create();
 
-        
+        */
     }
 }
