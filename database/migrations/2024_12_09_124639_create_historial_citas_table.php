@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('fecha')->index();
             $table->time('hora');
             $table->string('status')->index();
-            $table->json('servicio')->index();
+            $table->json('servicio');
             $table->longText('nota')->nullable();
             $table->boolean('is_emergency')->nullable();
             $table->timestamps();
